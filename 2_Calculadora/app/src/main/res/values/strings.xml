@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">2_Calculadora</string>
+    <string name="txt_n1">Ingresa el primer valor</string>
+    <string name="txt_n2">Ingresa el segundo valor</string>
+    <string name="btn_suma">Sumar</string>
+    <string name="tv_resultado">Resultado</string>
+
 </resources>
