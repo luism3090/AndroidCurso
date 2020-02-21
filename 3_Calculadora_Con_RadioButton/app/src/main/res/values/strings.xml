@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">3_Calculadora_Con_RadioButton</string>
+
+    <string name="txt_num1">Ingrese el primer valor</string>
+    <string name="txt_num2">Ingrese el segundo valor</string>
+
+    <string name="rd_sumar">Sumar</string>
+    <string name="rd_restar">Restar</string>
+    <string name="rd_dividir">Dividir</string>
+    <string name="rd_multiplicar">Multiplicar</string>
+
+    <string name="btn_calcular">Calcular</string>
+    <string name="tv_resultado">Resultado</string>
+
+</resources>
