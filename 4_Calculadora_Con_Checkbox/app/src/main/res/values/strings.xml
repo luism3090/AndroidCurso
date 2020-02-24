@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">4_Calculadora_Con_Checkbox</string>
+    <string name="et_num1">Ingrese el primer valor</string>
+    <string name="et_num2">Ingrese el segundo valor</string>
+    <string name="chk_sumar">Sumar</string>
+    <string name="chk_restar">Restar</string>
+    <string name="btn_calcular">Calcular</string>
+    <string name="tv_resultado">Resultado</string>
+</resources>
