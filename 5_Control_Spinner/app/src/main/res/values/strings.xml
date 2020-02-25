@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">5_Control_Spinner</string>
+    <string name="tv_titulo">Elija el producto</string>
+    <string name="sp_productos">Productos</string>
+    <string name="btn_Aceptar">Aceptar</string>
+    <string name="tv_resultado">_________</string>
+</resources>
