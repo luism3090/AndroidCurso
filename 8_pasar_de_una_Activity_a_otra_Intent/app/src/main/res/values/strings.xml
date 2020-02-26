@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">8_pasar_de_una_Activity_a_otra_Intent</string>
+    <string name="titulo">Primer Activity</string>
+    <string name="btn_sig">SIGUIENTE</string>
+    <string name="titulo2">Segundo Activity</string>
+    <string name="btn_ante">ANTERIOR</string>
+</resources>

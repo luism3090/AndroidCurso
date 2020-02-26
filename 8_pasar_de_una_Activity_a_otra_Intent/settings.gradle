@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='8_pasar_de_una_Activity_a_otra_Intent'
