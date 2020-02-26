@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Parametros_de_una_Activity_a_otra</string>
+    <string name="et_nombre">Nombre</string>
+    <string name="btn_enviar">Enviar</string>
+    <string name="tv_nombre">      </string>
+    <string name="btn_regresar">Regresar</string>
+</resources>
