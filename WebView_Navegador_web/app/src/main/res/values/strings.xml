@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WebView_Navegador_web</string>
+    <string name="txt_titulo">Seleccione una página</string>
+    <string name="boton_regresar">Regresar</string>
+</resources>
