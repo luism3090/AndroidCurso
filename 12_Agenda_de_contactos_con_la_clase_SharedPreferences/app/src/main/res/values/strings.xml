@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">12_Agenda_de_contactos_con_la_clase _SharedPreferences</string>
+    <string name="titulo">Agenda de contactos</string>
+    <string name="txt_nombre">Nombre</string>
+    <string name="txt_telefono">Télefono</string>
+    <string name="txt_direccion">Dirección</string>
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_buscar">Buscar</string>
+</resources>
