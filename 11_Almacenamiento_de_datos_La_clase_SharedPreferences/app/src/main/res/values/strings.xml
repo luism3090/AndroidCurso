@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">11_Almacenamiento_de_datos_La_clase_SharedPreferences</string>
+    <string name="txt_email">Ingrese su Email</string>
+    <string name="btn_guardar">Guardar</string>
+</resources>

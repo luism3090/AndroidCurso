@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='11_Almacenamiento_de_datos_La_clase_SharedPreferences'
