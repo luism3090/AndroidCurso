@@ -28,7 +28,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private EditText txt_codigo,txt_producto,txt_precio,txt_fabricante;
-    private Button btn_guardar,btn_buscar;
+    private Button btn_guardar,btn_buscar,btn_modificar,btn_eliminar;
     private ProgressDialog dialog;
 
     //ProgressDialog dialog = new ProgressDialog(MainActivity.this);
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         txt_fabricante = (EditText)findViewById(R.id.txt_fabricante);
         btn_guardar = (Button)findViewById(R.id.btn_guardar);
         btn_buscar = (Button)findViewById(R.id.btn_buscar);
+        btn_modificar = (Button)findViewById(R.id.btn_modificar);
+        btn_eliminar = (Button)findViewById(R.id.btn_eliminar);
 
 
         btn_guardar.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 if(error==false){
 
                     mostrarAlertaEspera();
-                    validaCodigoProducto("https://practicaproductos2.000webhostapp.com/validaCodigoProductos.php");
+                    validaCodigoProductoGuardar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoGuardar.php");
                     //guardarProductos("https://practicaproductos2.000webhostapp.com");
                 }
 
@@ -83,9 +85,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btn_modificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String codigo = txt_codigo.getText().toString();
+
+                boolean error = validarCampos();
+
+                if(error==false){
+
+                    mostrarAlertaEspera();
+                    validaCodigoProductoModificar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoModificar.php");
+                }
+
+            }
+        });
+
+        btn_eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String codigo = txt_codigo.getText().toString();
+
+                if(codigo.equals("")){
+
+                    Modals nuevaModal = new Modals("Mensaje","Ingrese el código del producto","OK",MainActivity.this);
+                    nuevaModal.createModal();
+                    txt_codigo.requestFocus();
+                }
+                else{
+                    mostrarAlertaEspera();
+                    validaCodigoProductoEliminar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoEliminar.php");
+                }
+
+            }
+        });
+
+
+
+
     }
 
-    private void guardarProductos(String url){
+    private void guardarProducto(String url){
        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -147,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void validaCodigoProducto(String url){
+    private void validaCodigoProductoGuardar(String url){
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
@@ -166,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (resultado.equals("OK")) {
 
-                        guardarProductos("https://practicaproductos2.000webhostapp.com");
+                        guardarProducto("https://practicaproductos2.000webhostapp.com/guardarProducto.php");
 
                     } else if (resultado.equals("WARNING")) {
 
@@ -278,6 +320,244 @@ public class MainActivity extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    private void modificarProducto(String url){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+
+                    }else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("codigo",txt_codigo.getText().toString());
+                parametros.put("producto",txt_producto.getText().toString());
+                parametros.put("precio",txt_precio.getText().toString());
+                parametros.put("fabricante",txt_fabricante.getText().toString());
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void validaCodigoProductoModificar(String url){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        modificarProducto("https://practicaproductos2.000webhostapp.com/modificarProducto.php");
+
+                    } else if (resultado.equals("WARNING")) {
+
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+
+                    }else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("codigo",txt_codigo.getText().toString());
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
+    private void eliminarProducto(String url){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+                        txt_codigo.setText("");
+                        txt_producto.setText("");
+                        txt_precio.setText("");
+                        txt_fabricante.setText("");
+
+
+                    }else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("codigo",txt_codigo.getText().toString());
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void validaCodigoProductoEliminar(String url){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        eliminarProducto("https://practicaproductos2.000webhostapp.com/eliminarProducto.php");
+
+                    } else if (resultado.equals("WARNING")) {
+
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+
+                    }else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+                        txt_codigo.requestFocus();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("codigo",txt_codigo.getText().toString());
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
 
     private boolean validarCampos(){
