@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 if(error==false){
 
                     mostrarAlertaEspera();
-                    validaCodigoProductoGuardar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoGuardar.php");
+                    validaCodigoProductoGuardar("https://practicaproductos2.000webhostapp.com/productos/validaCodigoProductoGuardar.php");
                     //guardarProductos("https://practicaproductos2.000webhostapp.com");
                 }
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     mostrarAlertaEspera();
-                    buscarProducto("https://practicaproductos2.000webhostapp.com/buscarProducto.php");
+                    buscarProducto("https://practicaproductos2.000webhostapp.com/productos/buscarProducto.php");
                 }
             }
         });
@@ -96,30 +96,30 @@ public class MainActivity extends AppCompatActivity {
                 if(error==false){
 
                     mostrarAlertaEspera();
-                    validaCodigoProductoModificar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoModificar.php");
+                    validaCodigoProductoModificar("https://practicaproductos2.000webhostapp.com/productos/validaCodigoProductoModificar.php");
                 }
 
             }
         });
 
         btn_eliminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                @Override
+                public void onClick(View view) {
 
-                String codigo = txt_codigo.getText().toString();
+                        String codigo = txt_codigo.getText().toString();
 
-                if(codigo.equals("")){
+                        if(codigo.equals("")){
 
-                    Modals nuevaModal = new Modals("Mensaje","Ingrese el código del producto","OK",MainActivity.this);
-                    nuevaModal.createModal();
-                    txt_codigo.requestFocus();
+                            Modals nuevaModal = new Modals("Mensaje","Ingrese el código del producto","OK",MainActivity.this);
+                            nuevaModal.createModal();
+                            txt_codigo.requestFocus();
+                        }
+                        else{
+                            mostrarAlertaEspera();
+                            validaCodigoProductoEliminar("https://practicaproductos2.000webhostapp.com/productos/validaCodigoProductoEliminar.php");
+                        }
+
                 }
-                else{
-                    mostrarAlertaEspera();
-                    validaCodigoProductoEliminar("https://practicaproductos2.000webhostapp.com/validaCodigoProductoEliminar.php");
-                }
-
-            }
         });
 
 
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (resultado.equals("OK")) {
 
-                        guardarProducto("https://practicaproductos2.000webhostapp.com/guardarProducto.php");
+                        guardarProducto("https://practicaproductos2.000webhostapp.com/productos/guardarProducto.php");
 
                     } else if (resultado.equals("WARNING")) {
 
@@ -399,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (resultado.equals("OK")) {
 
-                        modificarProducto("https://practicaproductos2.000webhostapp.com/modificarProducto.php");
+                        modificarProducto("https://practicaproductos2.000webhostapp.com/productos/modificarProducto.php");
 
                     } else if (resultado.equals("WARNING")) {
 
@@ -519,7 +519,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (resultado.equals("OK")) {
 
-                        eliminarProducto("https://practicaproductos2.000webhostapp.com/eliminarProducto.php");
+                        eliminarProducto("https://practicaproductos2.000webhostapp.com/productos/eliminarProducto.php");
 
                     } else if (resultado.equals("WARNING")) {
 
