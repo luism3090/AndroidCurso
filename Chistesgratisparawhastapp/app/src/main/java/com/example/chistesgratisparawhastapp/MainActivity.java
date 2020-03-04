@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -31,10 +32,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.DoubleBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
     ProgressDialog dialog;
 
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+
 
         mostrarAlertaEspera();
         obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
@@ -87,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
                             TextView textViewChiste = new TextView(getApplicationContext());
                             textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            textViewChiste.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Toast.makeText(getApplicationContext(),"Diste clic en el textView",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
@@ -97,65 +109,100 @@ public class MainActivity extends AppCompatActivity {
 
                             RelativeLayout rel_layout_acciones = new RelativeLayout(getApplicationContext());
                             rel_layout_acciones.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            rel_layout_acciones.setId(500+i);
+
 
                             ImageButton botonWhastapp = new ImageButton(getApplicationContext());
                             botonWhastapp.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            botonWhastapp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Toast.makeText(getApplicationContext(),"Nooooooooooooo",Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                             botonWhastapp.setImageResource(R.mipmap.icono_whatsapp);
                             botonWhastapp.setBackgroundColor(Color.TRANSPARENT);
                             botonWhastapp.setPadding(0,0,0,0);
-                            botonWhastapp.setId(i);
+                            botonWhastapp.setId(200+i);
+                            rel_layout_acciones.addView(botonWhastapp);
 
+
+                              /*
+                              
                             ImageButton botonFacebook = new ImageButton(getApplicationContext());
-                            botonWhastapp.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+                            botonFacebook.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            botonFacebook.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Toast.makeText(getApplicationContext(),"Diste clic en Facebook",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             botonFacebook.setImageResource(R.mipmap.icono_facebook);
                             botonFacebook.setBackgroundColor(Color.TRANSPARENT);
-                            botonFacebook.setPadding(150,-5,0,0);
+                            botonFacebook.setPadding(180,-5,0,0);
                             botonFacebook.setMaxHeight(55);
-                            botonFacebook.setId(i);
+                            botonFacebook.setId(100+i);
+                            rel_layout_acciones.addView(botonFacebook);
+
+
+
+
 
                             ImageButton botonCopiar = new ImageButton(getApplicationContext());
-                            botonWhastapp.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+                            botonCopiar.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            botonCopiar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Toast.makeText(getApplicationContext(),"Diste clic en Copiar",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             botonCopiar.setImageResource(R.mipmap.icono_copiar);
                             botonCopiar.setBackgroundColor(Color.TRANSPARENT);
-                            botonCopiar.setPadding(302,5,0,0);
-                            botonCopiar.setId(i);
+                            botonCopiar.setPadding(362,5,0,0);
+                            botonCopiar.setId(generateViewId());
+
+
 
                             ImageButton botonCompartir = new ImageButton(getApplicationContext());
                             botonCompartir.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                             botonCompartir.setImageResource(R.mipmap.icono_compartir);
                             botonCompartir.setBackgroundColor(Color.TRANSPARENT);
-                            botonCompartir.setPadding(442,5,0,0);
+                            botonCompartir.setPadding(522,5,0,0);
                             botonCompartir.setId(i);
 
                             ImageButton botonCorazon = new ImageButton(getApplicationContext());
-                            botonCompartir.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            botonCorazon.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                             botonCorazon.setImageResource(R.mipmap.icono_corazon);
                             botonCorazon.setBackgroundColor(Color.TRANSPARENT);
-                            botonCorazon.setPadding(602,5,0,0);
+                            botonCorazon.setPadding(702,5,0,0);
                             botonCorazon.setId(i);
 
-                            ImageButton botonVerMas = new ImageButton(getApplicationContext());
-                            botonVerMas.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            ImageButton botonAudio = new ImageButton(getApplicationContext());
+                            botonAudio.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                            botonVerMas.setImageResource(R.mipmap.icono_vermas);
-                            botonVerMas.setBackgroundColor(Color.TRANSPARENT);
-                            botonVerMas.setPadding(602,5,0,0);
-                            botonVerMas.setId(i);
+                            botonAudio.setImageResource(R.mipmap.icono_altavoz2);
+                            botonAudio.setBackgroundColor(Color.TRANSPARENT);
+                            botonAudio.setPadding(880,5,0,0);
+                            botonAudio.setId(i);
+
+                            */
+
+
 
                             layout_chistes.addView(textViewChiste);
                             layout_chistes.addView(rel_layout_acciones);
-                            rel_layout_acciones.addView(botonWhastapp);
-                            rel_layout_acciones.addView(botonFacebook);
-                            rel_layout_acciones.addView(botonCopiar);
+
+
+                            /*rel_layout_acciones.addView(botonCopiar);
                             rel_layout_acciones.addView(botonCompartir);
                             rel_layout_acciones.addView(botonCorazon);
-                            rel_layout_acciones.addView(botonVerMas);
+                            rel_layout_acciones.addView(botonAudio);*/
                             layout_chistes.addView(espacioEntreChiste);
+
+
 
                         }
 
@@ -216,6 +263,19 @@ public class MainActivity extends AppCompatActivity {
         if (dialog.isShowing())
             dialog.dismiss();
     }
-    
+
+    public static int generateViewId() {
+        for (; ; ) {
+            final int result = sNextGeneratedId.get();
+
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            int newValue = result + 1;
+            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result;
+            }
+        }
+    }
     
 }
