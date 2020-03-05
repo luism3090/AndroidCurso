@@ -1,0 +1,4 @@
+#Mon Mar 02 14:28:53 CST 2020
+base.0=C\:\\Users\\luis.molina\\AndroidStudioProjects\\100_MySQL_con_Android_Studio\\app\\build\\intermediates\\dex\\debug\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
