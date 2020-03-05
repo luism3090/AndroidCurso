@@ -7,7 +7,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e2a1ec16-e8ff-49eb-9550-96b3f44877fe" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/a100_mysql_con_android_studio/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/a100_mysql_con_android_studio/MainActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/runConfigurations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/proguard-rules.pro" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/proguard-rules.pro" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/androidTest/java/com/example/chistesgratisparawhastapp/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/androidTest/java/com/example/chistesgratisparawhastapp/ExampleInstrumentedTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/Modals.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/Modals.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/StringRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/StringRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/TTSManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/java/com/example/chistesgratisparawhastapp/TTSManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/test/java/com/example/chistesgratisparawhastapp/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/app/src/test/java/com/example/chistesgratisparawhastapp/ExampleUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Chistesgratisparawhastapp/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../Chistesgratisparawhastapp/settings.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,7 +50,7 @@
     <option name="testRunner" value="GRADLE" />
     <option name="delegatedBuild" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_25" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="bad49b230604" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -36,6 +67,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1Ya8kUutcbvvJBorJuplST5UViG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_API_25" />
     <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-03-02T17:43:57.565Z" />

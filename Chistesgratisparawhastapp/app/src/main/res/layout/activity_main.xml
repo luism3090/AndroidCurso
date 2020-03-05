@@ -46,5 +46,29 @@ app:layout_constraintTop_toBottomOf="@+id/layout_chistes"></LinearLayout>
 -->
     </ScrollView>
 
+    <!--
+    <TableRow
+        android:layout_width="343dp"
+        android:layout_height="67dp"
+        tools:layout_editor_absoluteX="107dp"
+        tools:layout_editor_absoluteY="591dp" >
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:srcCompat="@mipmap/icono_corazon" />
+
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:srcCompat="@mipmap/icono_corazon_favoritos" />
+    </TableRow>
+
+    -->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

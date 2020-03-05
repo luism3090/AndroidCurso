@@ -265,32 +265,37 @@ public class MainActivity extends AppCompatActivity {
                             });
 
 
-                            /*
+
                             ImageButton botonCorazonFavoritos = new ImageButton(getApplicationContext());
                             botonCorazonFavoritos.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                             botonCorazonFavoritos.setImageResource(R.mipmap.icono_corazon_favoritos);
                             botonCorazonFavoritos.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazonFavoritos.setPadding(38,26,0,0);
-                            botonCorazonFavoritos.setId(i);
-                            botonCorazonFavoritos.setVisibility(View.INVISIBLE);
+                            botonCorazonFavoritos.setId(1000+i+1);
+                            botonCorazonFavoritos.setVisibility(View.GONE);
                             contenedor.addView(botonCorazonFavoritos);
                             botonCorazonFavoritos.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
-                                    TextView textViewChiste = (TextView) findViewById(view.getId());
-                                    String textoChiste = textViewChiste.getText().toString();
+                                    view.setVisibility(View.GONE);
+                                    int val = view.getId();
+                                    int val2 = val + 1000;
 
-                                    view.setVisibility(View.INVISIBLE);
-                                    ImageButton botonCorazon = (ImageButton) findViewById(view.getId());
+                                    //String index = view.getId()+String.valueOf(1000);
+                                    ImageButton botonCorazon = (ImageButton) findViewById(val2);
                                     botonCorazon.setVisibility(View.VISIBLE);
+
+                                    int val3 = val - 1000 - 1;
+                                    TextView textViewChiste = (TextView) findViewById(val3);
+                                    //String textoChiste = textViewChiste.getText().toString();
+                                    //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),String.valueOf(val3),Toast.LENGTH_LONG).show();
+
 
                                 }
                             });
-
-                            */
-
 
 
 
@@ -300,21 +305,37 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazon.setImageResource(R.mipmap.icono_corazon);
                             botonCorazon.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazon.setPadding(38,26,0,0);
-                            botonCorazon.setId(i);
+                            botonCorazon.setId(2000+i+1);
                             contenedor.addView(botonCorazon);
 
                             botonCorazon.setOnClickListener(new View.OnClickListener() {
                                 @Override
 
                                 public void onClick(View view) {
-                                    TextView textViewChiste = (TextView) findViewById(view.getId());
-                                    String textoChiste = textViewChiste.getText().toString();
 
-                                    view.setBackgroundColor(Color.RED);
+                                    //TextView textViewChiste = (TextView) findViewById(view.getId());
+                                    //String textoChiste = textViewChiste.getText().toString();
+
+                                    view.setVisibility(View.GONE);
+                                    int val = view.getId();
+                                    int val2 = val - 1000;
+
+                                    //Toast.makeText(getApplicationContext(),String.valueOf(val2),Toast.LENGTH_SHORT).show();
+
+                                    //String index = view.getId()+String.valueOf(1000);
+                                    ImageButton botonCorazonRojo = (ImageButton) findViewById(val2);
+                                    botonCorazonRojo.setVisibility(View.VISIBLE);
+
+                                    int val3 = val - 2000 - 1;
+                                    TextView textViewChiste = (TextView) findViewById(val3);
+                                    //String textoChiste = textViewChiste.getText().toString();
+                                    //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),String.valueOf(val3),Toast.LENGTH_LONG).show();
 
 
                                 }
                             });
+
 
 
 
