@@ -1,10 +1,13 @@
 package com.example.chistesgratisparawhastapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -13,16 +16,22 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -47,28 +56,39 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
-    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
+    SwipeRefreshLayout miSwipeRefreshLayout;
     ProgressDialog dialog;
     TTSManager ttsManager = null;
 
     private TextToSpeech tts;
     SharedPreferences mipreferencia_user;
-    SharedPreferences mipreferencia_user_favoritos;
+    SharedPreferences mipreferencia_TotalRows;
+
+    ScrollView sv_main;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //
+
+        miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+        sv_main = (ScrollView)findViewById(R.id.scrol);
+
+        sv_main.setOnTouchListener(this);
+        sv_main.getViewTreeObserver().addOnScrollChangedListener(this);
 
         mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
         String id_usuario = mipreferencia_user.getString("id_usuario","");
-        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
 
         mostrarAlertaEspera();
         if(id_usuario.equals("")){
@@ -78,17 +98,41 @@ public class MainActivity extends AppCompatActivity {
             obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
         }
 
+        miSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+
+                layout_chistes.removeAllViews();
+                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        miSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+                },2000);
+
+
+            }
+        });
 
 
     }
 
+
+
     private void obtenerChistes(String url){
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
 
                 LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+
                 ttsManager = new TTSManager();
                 ttsManager.init(getApplicationContext());
 
@@ -113,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject chistesArray = datosChistesArray.getJSONObject(i);
                             String chiste = chistesArray.getString("chiste");
+                            String id_chiste = chistesArray.getString("id_chiste");
+                            int id_chiste_db = Integer.parseInt(id_chiste);
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
@@ -136,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                             textViewChiste.setGravity(Gravity.CENTER);
                             textViewChiste.setTextSize(24);
                             textViewChiste.setPadding(30,0,30,0);
-                            textViewChiste.setId(i);
+                            textViewChiste.setId(id_chiste_db);  //
                             layout_chistes.addView(textViewChiste);
                             textViewChiste.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -165,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                             botonWhastapp.setImageResource(R.mipmap.icono_whatsapp);
                             botonWhastapp.setBackgroundColor(Color.TRANSPARENT);
                             botonWhastapp.setPadding(0,26,0,0);
-                            botonWhastapp.setId(i);
+                            botonWhastapp.setId(id_chiste_db);
                             //botonWhastapp.setMinimumWidth(50);
                             contenedor.addView(botonWhastapp);
                             //layout_chistes.addView(botonWhastapp);
@@ -185,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         startActivity(sendIntent);
                                     }
-                                    catch (android.content.ActivityNotFoundException ex) {
+                                    catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Por favor instala WhatsApp", Toast.LENGTH_LONG).show();
                                     }
 
@@ -203,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                             botonFacebook.setBackgroundColor(Color.TRANSPARENT);
                             botonFacebook.setPadding(12,25,0,0);
                             //botonFacebook.setMaxHeight(55);
-                            botonFacebook.setId(i);
+                            botonFacebook.setId(id_chiste_db);
                             contenedor.addView(botonFacebook);
                             //layout_chistes.addView(botonFacebook);
                             //rel_layout_acciones.addView(botonFacebook);
@@ -223,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         startActivity(sendIntent);
                                     }
-                                    catch (android.content.ActivityNotFoundException ex) {
+                                    catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Por favor instala Facebook Messenger", Toast.LENGTH_LONG).show();
                                     }
 
@@ -237,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                             botonCopiar.setImageResource(R.mipmap.icono_copiar);
                             botonCopiar.setBackgroundColor(Color.TRANSPARENT);
                             botonCopiar.setPadding(22,32,0,0);
-                            botonCopiar.setId(i);
+                            botonCopiar.setId(id_chiste_db);
                             contenedor.addView(botonCopiar);
                             botonCopiar.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -260,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                             botonCompartir.setImageResource(R.mipmap.icono_compartir);
                             botonCompartir.setBackgroundColor(Color.TRANSPARENT);
                             botonCompartir.setPadding(30,32,0,0);
-                            botonCompartir.setId(i);
+                            botonCompartir.setId(id_chiste_db);
                             contenedor.addView(botonCompartir);
                             botonCompartir.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -284,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazonFavoritos.setImageResource(R.mipmap.icono_corazon_favoritos);
                             botonCorazonFavoritos.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazonFavoritos.setPadding(38,26,0,0);
-                            botonCorazonFavoritos.setId(1000000+i+1);
+                            botonCorazonFavoritos.setId(1000000+id_chiste_db);
                             if(id_boton_favorito_rojo.equals("null")){
                                 botonCorazonFavoritos.setVisibility(View.GONE);
                             }
@@ -304,18 +350,18 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     // HACIENDO VISIBLE EL CORAZON SIN RELLENO
-
+                                    //        1000017
                                     int val2 = val + 1000000;  // obteniendo el id del boton de corazon sin relleno rojo
                                     ImageButton botonCorazonSinRelleno = (ImageButton) findViewById(val2);
                                     botonCorazonSinRelleno.setVisibility(View.VISIBLE);
 
                                     // OBTENIENDO EL ID DEL TEXVIEW DEL CHISTE PARA LLEVARLO A LA TABLA DE FAVORITOS
-                                    int id_chiste = val - 1000000 - 1;
+                                    int id_chiste = val - 1000000;
                                     //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
 
-                                    eliminarChisteFavorito((id_chiste+1),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/eliminar_chiste_favorito.php");
+                                    eliminarChisteFavorito((id_chiste),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/eliminar_chiste_favorito.php");
 
                                 }
                             });
@@ -327,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazon.setImageResource(R.mipmap.icono_corazon);
                             botonCorazon.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazon.setPadding(38,26,0,0);
-                            botonCorazon.setId(2000000+i+1);
+                            botonCorazon.setId(2000000+id_chiste_db);
                             if(id_boton_favorito_normal.equals("null")){
                                 botonCorazon.setVisibility(View.VISIBLE);
                             }
@@ -342,23 +388,25 @@ public class MainActivity extends AppCompatActivity {
 
                                     // OBTENIENDO EL ID DEL ELEMENTO QUE SE LE DIO CLICK Y OCULTARLO
                                     view.setVisibility(View.GONE);
-                                    int val = view.getId();
+                                    int val = view.getId();  // 2000000
 
                                     //Toast.makeText(getApplicationContext(),String.valueOf(val2),Toast.LENGTH_SHORT).show();
 
                                     // VOLVIENDO VISIBLE EL ELEMENTO DE CORAZON ROJO PARA MOSTRARLO
+
+                                    //         17  - 1000000
                                     int val2 = val - 1000000;
                                     ImageButton botonCorazonRojo = (ImageButton) findViewById(val2);
                                     botonCorazonRojo.setVisibility(View.VISIBLE);
 
                                     // OBTENIENDO EL ID DEL TEXVIEW DEL CHISTE PARA LLEVARLO A LA TABLA DE FAVORITOS
-                                    int id_chiste = val - 2000000 - 1;
+                                    int id_chiste = val - 2000000;
                                     //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
                                     //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
 
-                                    guardarChisteFavorito((id_chiste+1),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/guardar_chiste_favorito.php");
+                                    guardarChisteFavorito((id_chiste),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/guardar_chiste_favorito.php");
 
                                 }
                             });
@@ -369,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
                             botonAudio.setImageResource(R.mipmap.icono_altavoz2);
                             botonAudio.setBackgroundColor(Color.TRANSPARENT);
                             botonAudio.setPadding(43,26,0,0);
-                            botonAudio.setId(i);
+                            botonAudio.setId(id_chiste_db);
                             contenedor.addView(botonAudio);
                             botonAudio.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -384,6 +432,31 @@ public class MainActivity extends AppCompatActivity {
                             });
 
                         }
+
+
+
+                        if(mipreferencia_TotalRows.getString("totalRows","").equals("")){
+
+                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor obj_editor  = mipreferencia_TotalRows.edit();
+                            obj_editor.putString("totalRows",String.valueOf(datosChistesArray.length()));
+                            obj_editor.commit();
+                        }
+                        else{
+
+                            String TotalRows = mipreferencia_TotalRows.getString("totalRows","");
+
+                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor obj_editor  = mipreferencia_TotalRows.edit();
+                            obj_editor.putString("totalRows",String.valueOf(TotalRows + 5));
+                            obj_editor.commit();
+
+                        }
+
+
+
+                        Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows",""), "Ok", MainActivity.this);
+                        nuevaModal.createModal();
 
                     }else{
 
@@ -412,7 +485,14 @@ public class MainActivity extends AppCompatActivity {
 
                 String id_usuario = mipreferencia_user.getString("id_usuario","");
 
+                String totalRows = mipreferencia_TotalRows.getString("totalRows","");
+
+                if(totalRows.equals("")){
+                    totalRows = "0";
+                }
+
                 parametros.put("id_usuario",id_usuario);
+                parametros.put("totalRows",totalRows);
 
                 return parametros;
             }
@@ -622,6 +702,35 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
+    }
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
+    }
+
+    @Override
+    public void onScrollChanged() {
+        View view = (View) sv_main.getChildAt(sv_main.getChildCount() - 1);
+        int topDetector = sv_main.getScrollY();
+        int bottomDetector = view.getBottom() -  (sv_main.getHeight() + sv_main.getScrollY());
+
+        if(topDetector <= 0) {
+            //Toast.makeText(getBaseContext(),"Scroll View top reached",Toast.LENGTH_SHORT).show();
+            //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
+            //shadow_top.setVisibility(View.INVISIBLE);
+        }
+        else if(bottomDetector <= 0 ) {
+            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+            //Toast.makeText(getBaseContext(),"has llegado hasta abajo",Toast.LENGTH_SHORT).show();
+            //Log.d(MainActivity.class.getSimpleName(),"Scroll View bottom reached");
+            //shadow_bottom.setVisibility(View.INVISIBLE);
+        }
+        else {
+            //shadow_top.setVisibility(View.VISIBLE);
+            //shadow_bottom.setVisibility(View.VISIBLE);
+        }
     }
 
 

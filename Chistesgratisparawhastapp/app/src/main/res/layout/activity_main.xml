@@ -7,68 +7,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-    <!--  -->
-    <ScrollView
-        android:id="@+id/scrol"
-        android:layout_width="345dp"
-        android:layout_height="590dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-    <LinearLayout
-        android:id="@+id/layout_chistes"
-        android:layout_width="350dp"
-        android:layout_height="589dp"
-        android:layout_marginTop="4dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-    </LinearLayout>
-
-        <!--
-<LinearLayout
-android:id="@+id/layout_acciones_chiste"
-android:layout_width="405dp"
-android:layout_height="52dp"
-android:layout_marginStart="20dp"
-android:layout_marginLeft="20dp"
-android:orientation="horizontal"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@+id/layout_chistes"></LinearLayout>
+    <!--
 
 -->
-    </ScrollView>
+
+       <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@+id/mirefresh">
+
+       <ScrollView
+           android:id="@+id/scrol"
+           android:layout_width="350dp"
+           android:layout_height="590dp"
+           android:orientation="vertical"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent">
 
 
-    <!--
-    <TableRow
-        android:layout_width="343dp"
-        android:layout_height="67dp"
-        tools:layout_editor_absoluteX="107dp"
-        tools:layout_editor_absoluteY="591dp" >
 
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:srcCompat="@mipmap/icono_corazon" />
+       <LinearLayout
+           android:id="@+id/layout_chistes"
+           android:layout_width="350dp"
+           android:layout_height="590dp"
+           android:layout_marginTop="4dp"
+           android:layout_marginLeft="30dp"
+           android:orientation="vertical"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:srcCompat="@mipmap/icono_corazon_favoritos" />
-    </TableRow>
 
+       </LinearLayout>
+
+
+
+       </ScrollView>
+
+           </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!--
     -->
 
 
