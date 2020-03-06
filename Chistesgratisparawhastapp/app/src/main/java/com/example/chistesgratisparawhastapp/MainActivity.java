@@ -66,61 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
 
-
-        // String id_usuario = mipreferencia_user.getString("1","");
-        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
-
-
-
-        /*  DATOS PARA TODO LA ALGORITMIA DEL BOTON FAVORITOS
-
-        SharedPreferences mipreferencia2 = getSharedPreferences("datos_favoritos", Context.MODE_PRIVATE);
-        SharedPreferences.Editor obj_editor  = mipreferencia2.edit();
-        obj_editor.putString("1","");
-        obj_editor.commit();
-
-
-        String [] arreglo = {"10/10/2020;1;1;2000","5/10/2020;1;8;2010","06/06/2020;1;8;2999"};
-        String arreglo_cad ="";
-       // Toast.makeText(getApplicationContext(),String.valueOf(arreglo.length),Toast.LENGTH_LONG).show();
-        for(int i=0;i<arreglo.length ; i++)
-        {
-                if(i==arreglo.length-1){
-                    arreglo_cad = arreglo_cad + arreglo[i];
-                }
-                else{
-                    arreglo_cad = arreglo_cad + arreglo[i]+"__";
-                }
-        }
-        obj_editor.putString("1",arreglo_cad);
-        obj_editor.commit();
-
-        String[] partsDatosFavoritos1 = mipreferencia2.getString("1","").split("__");
-        String[] partsDatosFavoritos2;
-        String id_boto = "2999";
-        String partsDatosFavoritosFinal ="";
-        for(int i=0;i<partsDatosFavoritos1.length ; i++)
-        {
-            partsDatosFavoritos2 = partsDatosFavoritos1[i].split(";");
-
-            if(id_boto.equals(partsDatosFavoritos2[3])){
-
-                partsDatosFavoritosFinal = partsDatosFavoritos1[i];
-
-                break;
-            }
-        }
-        Modals nuevaModal = new Modals("Mensaje", partsDatosFavoritosFinal, "OK", MainActivity.this);
-        nuevaModal.createModal();
-
-        */
-
-
-
-
         mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
         String id_usuario = mipreferencia_user.getString("id_usuario","");
-        Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
 
         mostrarAlertaEspera();
         if(id_usuario.equals("")){
@@ -336,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazonFavoritos.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazonFavoritos.setPadding(38,26,0,0);
                             botonCorazonFavoritos.setId(1000000+i+1);
-                            if(id_boton_favorito_rojo.equals("")){
+                            if(id_boton_favorito_rojo.equals("null")){
                                 botonCorazonFavoritos.setVisibility(View.GONE);
                             }
                             else{
@@ -365,13 +313,11 @@ public class MainActivity extends AppCompatActivity {
                                     //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
-                                    //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
 
-
+                                    eliminarChisteFavorito((id_chiste+1),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/eliminar_chiste_favorito.php");
 
                                 }
                             });
-
 
 
                             ImageButton botonCorazon = new ImageButton(getApplicationContext());
@@ -381,18 +327,17 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazon.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazon.setPadding(38,26,0,0);
                             botonCorazon.setId(2000000+i+1);
-                            if(id_boton_favorito_normal.equals("")){
+                            if(id_boton_favorito_normal.equals("null")){
                                 botonCorazon.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                                botonCorazon.setVisibility(View.GONE);
                             }
                             contenedor.addView(botonCorazon);
                             botonCorazon.setOnClickListener(new View.OnClickListener() {
                                 @Override
 
                                 public void onClick(View view) {
-
-                                    //TextView textViewChiste = (TextView) findViewById(view.getId());
-                                    //String textoChiste = textViewChiste.getText().toString();
-
 
                                     // OBTENIENDO EL ID DEL ELEMENTO QUE SE LE DIO CLICK Y OCULTARLO
                                     view.setVisibility(View.GONE);
@@ -412,13 +357,10 @@ public class MainActivity extends AppCompatActivity {
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
                                     //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
 
+                                    guardarChisteFavorito((id_chiste+1),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/guardar_chiste_favorito.php");
 
                                 }
                             });
-
-
-
-
 
                             ImageButton botonAudio = new ImageButton(getApplicationContext());
                             botonAudio.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -440,13 +382,11 @@ public class MainActivity extends AppCompatActivity {
 
                             });
 
-
-
                         }
 
                     }else{
 
-                        Modals nuevaModal = new Modals("Mensaje", error, mensaje, MainActivity.this);
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", MainActivity.this);
                         nuevaModal.createModal();
 
                     }
@@ -469,7 +409,9 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros = new HashMap<String,String>();
 
-                parametros.put("id_usuario",mipreferencia_user.getString("id_usuario",""));
+                String id_usuario = mipreferencia_user.getString("id_usuario","");
+
+                parametros.put("id_usuario",id_usuario);
 
                 return parametros;
             }
@@ -548,6 +490,128 @@ public class MainActivity extends AppCompatActivity {
                 String id_usuario = mipreferencia_user.getString("id_usuario","");
 
                 parametros.put("id_usuario",id_usuario);
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
+
+    private void guardarChisteFavorito(final int id_chiste, final String id_usuario, final int id_boton_favorito_normal, final int id_boton_favorito_rojo, String url){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                //ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+
+                    }
+                    else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("id_chiste", String.valueOf(id_chiste));
+                parametros.put("id_usuario",id_usuario);
+                parametros.put("id_boton_favorito_normal", String.valueOf(id_boton_favorito_normal));
+                parametros.put("id_boton_favorito_rojo", String.valueOf(id_boton_favorito_rojo));
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+    }
+
+    private void eliminarChisteFavorito(final int id_chiste, final String id_usuario, final int id_boton_favorito_normal, final int id_boton_favorito_rojo, String url)
+    {
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                //ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+
+                    }
+                    else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                parametros.put("id_chiste", String.valueOf(id_chiste));
+                parametros.put("id_usuario",id_usuario);
+                parametros.put("id_boton_favorito_normal", String.valueOf(id_boton_favorito_normal));
+                parametros.put("id_boton_favorito_rojo", String.valueOf(id_boton_favorito_rojo));
 
                 return parametros;
             }
