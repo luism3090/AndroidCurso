@@ -74,9 +74,10 @@ public class MainActivity extends AppCompatActivity {
         if(id_usuario.equals("")){
             generarIdUsuario("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/generar_id_usuario.php");
         }
+        else{
+            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+        }
 
-
-        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
 
 
     }
@@ -456,7 +457,9 @@ public class MainActivity extends AppCompatActivity {
                         obj_editor.putString("id_usuario",mensaje);
                         obj_editor.commit();
 
-                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
+
+                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
 
                     } else if (resultado.equals("WARNING")) {
 
