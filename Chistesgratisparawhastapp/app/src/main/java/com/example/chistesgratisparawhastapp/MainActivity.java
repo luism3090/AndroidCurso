@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     TTSManager ttsManager = null;
 
     private TextToSpeech tts;
+    SharedPreferences mipreferencia_user;
+    SharedPreferences mipreferencia_user_favoritos;
 
 
     @Override
@@ -63,9 +65,69 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-        //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+
+
+        // String id_usuario = mipreferencia_user.getString("1","");
+        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
+
+
+
+        /*  DATOS PARA TODO LA ALGORITMIA DEL BOTON FAVORITOS
+
+        SharedPreferences mipreferencia2 = getSharedPreferences("datos_favoritos", Context.MODE_PRIVATE);
+        SharedPreferences.Editor obj_editor  = mipreferencia2.edit();
+        obj_editor.putString("1","");
+        obj_editor.commit();
+
+
+        String [] arreglo = {"10/10/2020;1;1;2000","5/10/2020;1;8;2010","06/06/2020;1;8;2999"};
+        String arreglo_cad ="";
+       // Toast.makeText(getApplicationContext(),String.valueOf(arreglo.length),Toast.LENGTH_LONG).show();
+        for(int i=0;i<arreglo.length ; i++)
+        {
+                if(i==arreglo.length-1){
+                    arreglo_cad = arreglo_cad + arreglo[i];
+                }
+                else{
+                    arreglo_cad = arreglo_cad + arreglo[i]+"__";
+                }
+        }
+        obj_editor.putString("1",arreglo_cad);
+        obj_editor.commit();
+
+        String[] partsDatosFavoritos1 = mipreferencia2.getString("1","").split("__");
+        String[] partsDatosFavoritos2;
+        String id_boto = "2999";
+        String partsDatosFavoritosFinal ="";
+        for(int i=0;i<partsDatosFavoritos1.length ; i++)
+        {
+            partsDatosFavoritos2 = partsDatosFavoritos1[i].split(";");
+
+            if(id_boto.equals(partsDatosFavoritos2[3])){
+
+                partsDatosFavoritosFinal = partsDatosFavoritos1[i];
+
+                break;
+            }
+        }
+        Modals nuevaModal = new Modals("Mensaje", partsDatosFavoritosFinal, "OK", MainActivity.this);
+        nuevaModal.createModal();
+
+        */
+
+
+
+
+        mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
+        String id_usuario = mipreferencia_user.getString("id_usuario","");
+        Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_LONG).show();
 
         mostrarAlertaEspera();
+        if(id_usuario.equals("")){
+            generarIdUsuario("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/generar_id_usuario.php");
+        }
+
+
         obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
 
 
@@ -85,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 //LinearLayout layout_acciones_chiste = (LinearLayout)findViewById(R.id.layout_acciones_chiste);
 
 
-
                 ocultarAlertaEspera();
                 try {
 
@@ -103,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject chistesArray = datosChistesArray.getJSONObject(i);
                             String chiste = chistesArray.getString("chiste");
+                            String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
+                            String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
 
                             // --------------------------------------- Creando el espacio entre chistes ---------------------------------
@@ -129,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                             textViewChiste.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Toast.makeText(getApplicationContext(),String.valueOf(view.getId()+" Texto"),Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(),String.valueOf(view.getId()+" Texto"),Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -272,26 +335,38 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazonFavoritos.setImageResource(R.mipmap.icono_corazon_favoritos);
                             botonCorazonFavoritos.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazonFavoritos.setPadding(38,26,0,0);
-                            botonCorazonFavoritos.setId(1000+i+1);
-                            botonCorazonFavoritos.setVisibility(View.GONE);
+                            botonCorazonFavoritos.setId(1000000+i+1);
+                            if(id_boton_favorito_rojo.equals("")){
+                                botonCorazonFavoritos.setVisibility(View.GONE);
+                            }
+                            else{
+                                botonCorazonFavoritos.setVisibility(View.VISIBLE);
+                            }
                             contenedor.addView(botonCorazonFavoritos);
                             botonCorazonFavoritos.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
-                                    view.setVisibility(View.GONE);
-                                    int val = view.getId();
-                                    int val2 = val + 1000;
 
-                                    //String index = view.getId()+String.valueOf(1000);
-                                    ImageButton botonCorazon = (ImageButton) findViewById(val2);
-                                    botonCorazon.setVisibility(View.VISIBLE);
+                                    // OBTENIENDO EL ID DEL ELEMENTO QUE SE LE DIO CLICK Y OCULTARLO
 
-                                    int val3 = val - 1000 - 1;
-                                    TextView textViewChiste = (TextView) findViewById(val3);
+                                    view.setVisibility(View.GONE);  // ocultando el elemento al que se le dio click
+                                    int val = view.getId(); // obteniendo el id del elemento al que se le dio click
+
+
+                                    // HACIENDO VISIBLE EL CORAZON SIN RELLENO
+
+                                    int val2 = val + 1000000;  // obteniendo el id del boton de corazon sin relleno rojo
+                                    ImageButton botonCorazonSinRelleno = (ImageButton) findViewById(val2);
+                                    botonCorazonSinRelleno.setVisibility(View.VISIBLE);
+
+                                    // OBTENIENDO EL ID DEL TEXVIEW DEL CHISTE PARA LLEVARLO A LA TABLA DE FAVORITOS
+                                    int id_chiste = val - 1000000 - 1;
+                                    //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),String.valueOf(val3),Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
+
 
 
                                 }
@@ -305,9 +380,11 @@ public class MainActivity extends AppCompatActivity {
                             botonCorazon.setImageResource(R.mipmap.icono_corazon);
                             botonCorazon.setBackgroundColor(Color.TRANSPARENT);
                             botonCorazon.setPadding(38,26,0,0);
-                            botonCorazon.setId(2000+i+1);
+                            botonCorazon.setId(2000000+i+1);
+                            if(id_boton_favorito_normal.equals("")){
+                                botonCorazon.setVisibility(View.VISIBLE);
+                            }
                             contenedor.addView(botonCorazon);
-
                             botonCorazon.setOnClickListener(new View.OnClickListener() {
                                 @Override
 
@@ -316,21 +393,24 @@ public class MainActivity extends AppCompatActivity {
                                     //TextView textViewChiste = (TextView) findViewById(view.getId());
                                     //String textoChiste = textViewChiste.getText().toString();
 
+
+                                    // OBTENIENDO EL ID DEL ELEMENTO QUE SE LE DIO CLICK Y OCULTARLO
                                     view.setVisibility(View.GONE);
                                     int val = view.getId();
-                                    int val2 = val - 1000;
 
                                     //Toast.makeText(getApplicationContext(),String.valueOf(val2),Toast.LENGTH_SHORT).show();
 
-                                    //String index = view.getId()+String.valueOf(1000);
+                                    // VOLVIENDO VISIBLE EL ELEMENTO DE CORAZON ROJO PARA MOSTRARLO
+                                    int val2 = val - 1000000;
                                     ImageButton botonCorazonRojo = (ImageButton) findViewById(val2);
                                     botonCorazonRojo.setVisibility(View.VISIBLE);
 
-                                    int val3 = val - 2000 - 1;
-                                    TextView textViewChiste = (TextView) findViewById(val3);
+                                    // OBTENIENDO EL ID DEL TEXVIEW DEL CHISTE PARA LLEVARLO A LA TABLA DE FAVORITOS
+                                    int id_chiste = val - 2000000 - 1;
+                                    //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),String.valueOf(val3),Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
 
 
                                 }
@@ -389,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> parametros = new HashMap<String,String>();
 
-                parametros.put("","");
+                parametros.put("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
                 return parametros;
             }
@@ -397,8 +477,6 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
-
-
 
     private void mostrarAlertaEspera(){
         dialog = new ProgressDialog(MainActivity.this);
@@ -412,18 +490,71 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
     }
 
-    public static int generateViewId() {
-        for (; ; ) {
-            final int result = sNextGeneratedId.get();
+    private void generarIdUsuario(String url){
 
-            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
-            int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
-            if (sNextGeneratedId.compareAndSet(result, newValue)) {
-                return result;
+            @Override
+            public void onResponse(String response) {
+                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                //ocultarAlertaEspera();
+                try {
+
+                    JSONObject responseJSON = new JSONObject(response);
+
+                    String mensaje = responseJSON.getString("mensaje");
+                    String error = responseJSON.getString("error");
+                    String resultado = responseJSON.getString("resultado");
+
+                    if (resultado.equals("OK")) {
+
+                        mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor obj_editor  = mipreferencia_user.edit();
+                        obj_editor.putString("id_usuario",mensaje);
+                        obj_editor.commit();
+
+                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
+
+                    } else if (resultado.equals("WARNING")) {
+
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+
+                    }else{
+
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        nuevaModal.createModal();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
+                }
+
             }
-        }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+
+                String id_usuario = mipreferencia_user.getString("id_usuario","");
+
+                parametros.put("id_usuario",id_usuario);
+
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
     }
 
 
