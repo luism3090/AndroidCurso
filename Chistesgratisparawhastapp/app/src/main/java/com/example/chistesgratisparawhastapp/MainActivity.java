@@ -14,10 +14,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -50,6 +52,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.nio.DoubleBuffer;
 import java.util.HashMap;
 import java.util.Locale;
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     SharedPreferences mipreferencia_TotalRows;
 
     ScrollView sv_main;
-
+    int x=0;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -88,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
         String id_usuario = mipreferencia_user.getString("id_usuario","");
 
+        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+        SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+        obj_editor2.putString("totalRows","0");
+        obj_editor2.commit();
+
         //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
 
         mostrarAlertaEspera();
@@ -95,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             generarIdUsuario("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/generar_id_usuario.php");
         }
         else{
-            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
         }
 
         miSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -105,7 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
 
                 layout_chistes.removeAllViews();
-                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+                mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+                obj_editor2.putString("totalRows","0");
+                obj_editor2.commit();
+                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -125,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
 
 
-    private void obtenerChistes(String url){
+    private void obtenerChistes(String url, final String mostrar){
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -139,8 +152,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 //ConstraintLayout layout_principal = (ConstraintLayout)findViewById(R.id.layout_principal);
                 //LinearLayout layout_acciones_chiste = (LinearLayout)findViewById(R.id.layout_acciones_chiste);
 
+                if(mostrar.equals("2")){
+                    ocultarAlertaEspera();
+                }
 
-                ocultarAlertaEspera();
                 try {
 
                     JSONObject responseJSON = new JSONObject(response);
@@ -260,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     TextView textViewChiste = (TextView) findViewById(view.getId());
                                     String textoChiste = textViewChiste.getText().toString();
 
+                                    /*
                                     Intent sendIntent = new Intent();
                                     sendIntent.setAction(Intent.ACTION_SEND);
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(textoChiste));
@@ -271,7 +287,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     }
                                     catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Por favor instala Facebook Messenger", Toast.LENGTH_LONG).show();
+                                    }*/
+
+
+                                    textViewChiste.setDrawingCacheEnabled(true); // Enable drawing cache before calling the getDrawingCache() method
+                                    // Get bitmap object from the TextView
+                                    Bitmap tvImage= Bitmap.createBitmap(textViewChiste.getDrawingCache());
+                                    try {
+                                        // Save the bitmap object to file
+                                        tvImage.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(Environment.getExternalStorageDirectory()+"/tvimage.png"));
+                                    } catch (FileNotFoundException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
                                     }
+
+                                    Intent sendIntent1 = new Intent();
+                                    sendIntent1.setAction(Intent.ACTION_SEND);
+                                    sendIntent1.setType("image/*");
+                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, String.valueOf(textoChiste));
+                                    sendIntent1.setType("text/plain");
 
                                 }
                             });
@@ -432,31 +466,26 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             });
 
                         }
-
-
-
-                        if(mipreferencia_TotalRows.getString("totalRows","").equals("")){
-
-                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor obj_editor  = mipreferencia_TotalRows.edit();
-                            obj_editor.putString("totalRows",String.valueOf(datosChistesArray.length()));
-                            obj_editor.commit();
-                        }
-                        else{
-
-                            String TotalRows = mipreferencia_TotalRows.getString("totalRows","");
+                            String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
+                            int regs = Integer.parseInt(rowsPref)+5;
+                            String TotalRows = String.valueOf(regs);
 
                             mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor obj_editor  = mipreferencia_TotalRows.edit();
-                            obj_editor.putString("totalRows",String.valueOf(TotalRows + 5));
-                            obj_editor.commit();
+                            SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+                            obj_editor2.putString("totalRows","");
+                            obj_editor2.commit();
 
-                        }
+                            //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_b", Toast.LENGTH_LONG).show();
 
+                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor obj_editor1  = mipreferencia_TotalRows.edit();
+                            obj_editor1.putString("totalRows",String.valueOf(TotalRows));
+                            obj_editor1.commit();
 
+                            //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
 
-                        Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows",""), "Ok", MainActivity.this);
-                        nuevaModal.createModal();
+                           // Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows","")+"b", "Ok", MainActivity.this);
+                           // nuevaModal.createModal();
 
                     }else{
 
@@ -464,7 +493,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         nuevaModal.createModal();
 
                     }
-
 
 
                 } catch (JSONException e) {
@@ -487,10 +515,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 String totalRows = mipreferencia_TotalRows.getString("totalRows","");
 
-                if(totalRows.equals("")){
-                    totalRows = "0";
-                }
-
                 parametros.put("id_usuario",id_usuario);
                 parametros.put("totalRows",totalRows);
 
@@ -512,6 +536,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         if (dialog.isShowing())
             dialog.dismiss();
     }
+
+    private void mostrarAlertaCargando(){
+        dialog = new ProgressDialog(MainActivity.this);
+        dialog.setMessage("Cargando mas chistes...");
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 
     private void generarIdUsuario(String url){
 
@@ -539,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
 
-                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
+                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
 
                     } else if (resultado.equals("WARNING")) {
 
@@ -717,21 +749,48 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         int bottomDetector = view.getBottom() -  (sv_main.getHeight() + sv_main.getScrollY());
 
         if(topDetector <= 0) {
+
             //Toast.makeText(getBaseContext(),"Scroll View top reached",Toast.LENGTH_SHORT).show();
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
             //shadow_top.setVisibility(View.INVISIBLE);
         }
         else if(bottomDetector <= 0 ) {
-            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php");
-            //Toast.makeText(getBaseContext(),"has llegado hasta abajo",Toast.LENGTH_SHORT).show();
+            x=x+1;
+            String c = String.valueOf(x);
+            //Toast.makeText(getBaseContext(),"has llegado hasta abajo"+c,Toast.LENGTH_SHORT).show();
+            if(c.equals("1")){
+                //Toast.makeText(getBaseContext(),"has llegado hasta abajo cuando vale "+c,Toast.LENGTH_SHORT).show();
+
+                mostrarAlertaCargando();
+                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        ocultarAlertaEspera();
+
+                    }
+                },2000);
+
+
+
+            }
+            else{
+                //Toast.makeText(getBaseContext(),"has llegado hasta abajo pero cayo en el else"+c,Toast.LENGTH_SHORT).show();
+            }
+
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View bottom reached");
             //shadow_bottom.setVisibility(View.INVISIBLE);
         }
         else {
             //shadow_top.setVisibility(View.VISIBLE);
             //shadow_bottom.setVisibility(View.VISIBLE);
+            x=0;
+            //Toast.makeText(getBaseContext(),"en medio",Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }

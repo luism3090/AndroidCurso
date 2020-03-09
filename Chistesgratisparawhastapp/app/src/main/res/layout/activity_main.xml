@@ -18,9 +18,10 @@
 
        <ScrollView
            android:id="@+id/scrol"
-           android:layout_width="350dp"
+           android:layout_width="330dp"
            android:layout_height="590dp"
            android:orientation="vertical"
+           android:layout_marginLeft="15dp"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toTopOf="parent">
@@ -29,10 +30,10 @@
 
        <LinearLayout
            android:id="@+id/layout_chistes"
-           android:layout_width="350dp"
+           android:layout_width="330dp"
            android:layout_height="590dp"
            android:layout_marginTop="4dp"
-           android:layout_marginLeft="30dp"
+           android:layout_marginLeft="15dp"
            android:orientation="vertical"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"

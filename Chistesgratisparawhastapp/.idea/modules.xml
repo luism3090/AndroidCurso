@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Chistes gratis para whastapp.iml" filepath="$PROJECT_DIR$/Chistes gratis para whastapp.iml" group="Chistes gratis para whastapp" />
+      <module fileurl="file://$PROJECT_DIR$/Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" filepath="$PROJECT_DIR$/Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" group="Chistes gratis para whastapp" />
+      <module fileurl="file://$PROJECT_DIR$/app/Chistesgratisparawhastapp-app.iml" filepath="$PROJECT_DIR$/app/Chistesgratisparawhastapp-app.iml" group="Chistes gratis para whastapp/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Chistes gratis para whastapp/app" />
     </modules>
   </component>
