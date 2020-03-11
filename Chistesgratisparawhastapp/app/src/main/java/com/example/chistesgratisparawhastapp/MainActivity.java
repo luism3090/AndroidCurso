@@ -2,12 +2,10 @@ package com.example.chistesgratisparawhastapp;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -15,31 +13,23 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Scroller;
 import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -58,18 +48,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.DoubleBuffer;
-import java.security.AccessController;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
@@ -81,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     SharedPreferences mipreferencia_user;
     SharedPreferences mipreferencia_TotalRows;
 
+//    ImageView image_home1,image_home2,image_categorias1,image_categorias2,image_favoritos1,image_favoritos2,image_nuevos1,image_nuevos2;
+
     ScrollView sv_main;
     int x=0;
 
@@ -91,9 +77,123 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.activity_main);
 
 
-        miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
+        //miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
+
+
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
         sv_main = (ScrollView)findViewById(R.id.scrol);
+
+        final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
+        final ImageView image_home2 = (ImageView)findViewById(R.id.image_home2);
+        final ImageView image_categorias1 = (ImageView)findViewById(R.id.image_categorias1);
+        final ImageView image_categorias2 = (ImageView)findViewById(R.id.image_categorias2);
+        final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
+        final ImageView image_favoritos2 = (ImageView)findViewById(R.id.image_favoritos2);
+        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
+        final ImageView image_nuevos2 = (ImageView)findViewById(R.id.image_nuevos2);
+
+        image_home1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+                layout_chistes.removeAllViews();
+
+                mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+                obj_editor2.putString("totalRows","0");
+                obj_editor2.commit();
+
+                mostrarAlertaEspera();
+                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
+
+                image_home1.setVisibility(View.GONE);
+                image_home2.setVisibility(View.VISIBLE);
+
+                // VISIBLES TODOS LOS QUE LLEVAN POR 1
+
+                image_categorias1.setVisibility(View.VISIBLE);
+                image_favoritos1.setVisibility(View.VISIBLE);
+                image_nuevos1.setVisibility(View.VISIBLE);
+
+
+                // INVISIBLES TODOS LOS QUE LLEVAN 2
+                image_categorias2.setVisibility(View.GONE);
+                image_favoritos2.setVisibility(View.GONE);
+                image_nuevos2.setVisibility(View.GONE);
+
+            }
+        });
+
+
+        image_categorias1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //image_categorias1.setVisibility(View.GONE);
+                image_categorias2.setVisibility(View.VISIBLE);
+
+                // INVISIBLES TODOS LOS QUE LLEVAN 2
+
+                image_home2.setVisibility(View.GONE);
+                image_favoritos2.setVisibility(View.GONE);
+                image_nuevos2.setVisibility(View.GONE);
+
+                // VISIBLES TODOS LOS QUE LLEVAN POR 1
+
+                image_home1.setVisibility(View.VISIBLE);
+                image_favoritos1.setVisibility(View.VISIBLE);
+                image_nuevos1.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        image_favoritos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //image_favoritos1.setVisibility(View.GONE);
+                image_favoritos2.setVisibility(View.VISIBLE);
+
+                // VISIBLES TODOS LOS QUE LLEVAN POR 1
+
+                image_home1.setVisibility(View.VISIBLE);
+                image_categorias1.setVisibility(View.VISIBLE);
+                image_nuevos1.setVisibility(View.VISIBLE);
+
+
+                // INVISIBLES TODOS LOS QUE LLEVAN 2
+
+                image_home2.setVisibility(View.GONE);
+                image_categorias2.setVisibility(View.GONE);
+                image_nuevos2.setVisibility(View.GONE);
+
+            }
+        });
+
+        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //image_favoritos1.setVisibility(View.GONE);
+                image_nuevos2.setVisibility(View.VISIBLE);
+
+                // VISIBLES TODOS LOS QUE LLEVAN POR 1
+
+                image_home1.setVisibility(View.VISIBLE);
+                image_categorias1.setVisibility(View.VISIBLE);
+                image_favoritos1.setVisibility(View.VISIBLE);
+
+
+                // INVISIBLES TODOS LOS QUE LLEVAN 2
+
+                image_home2.setVisibility(View.GONE);
+                image_categorias2.setVisibility(View.GONE);
+                image_favoritos2.setVisibility(View.GONE);
+
+            }
+        });
+
 
 
         sv_main.setOnTouchListener(this);
@@ -116,6 +216,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         else{
             obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
         }
+
+        /*
 
         miSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -142,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
             }
         });
+
+        */
 
 
     }
@@ -201,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
-                            textViewChiste.setGravity(Gravity.CENTER);
+                            textViewChiste.setGravity(Gravity.CENTER_VERTICAL);
                             textViewChiste.setTextSize(24);
                             textViewChiste.setPadding(30,0,30,0);
                             textViewChiste.setId(id_chiste_db);  //
@@ -220,8 +324,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             LinearLayout contenedor = new LinearLayout(getApplicationContext());
                             contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                             contenedor.setOrientation(LinearLayout.HORIZONTAL);
-                            contenedor.setPadding(0,-30,0,0);
-                            contenedor.setGravity(Gravity.LEFT);
+                            //contenedor.setBackgroundColor(Color.rgb(20,50,90));
+                            contenedor.setPadding(25,-30,0,0);
+                            contenedor.setGravity(Gravity.CENTER_VERTICAL);
                             layout_chistes.addView(contenedor);
 
 
