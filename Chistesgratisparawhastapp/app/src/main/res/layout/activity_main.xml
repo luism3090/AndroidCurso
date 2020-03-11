@@ -8,8 +8,8 @@
     tools:context=".MainActivity">
 
     <!--
-
 -->
+
 
        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
            android:layout_width="match_parent"
@@ -44,12 +44,14 @@
 
 
 
-       </ScrollView>
 
-           </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+          </ScrollView>
 
-        <!--
-    -->
+              </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <!--
+-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

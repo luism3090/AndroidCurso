@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -26,9 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.speech.RecognizerIntent;
-import android.speech.tts.TextToSpeech;
+import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +62,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.DoubleBuffer;
 import java.security.AccessController;
 import java.util.HashMap;
@@ -77,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     ProgressDialog dialog;
     TTSManager ttsManager = null;
 
-    private TextToSpeech tts;
     SharedPreferences mipreferencia_user;
     SharedPreferences mipreferencia_TotalRows;
 
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //
 
         miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
         //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
@@ -159,9 +158,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 ttsManager = new TTSManager();
                 ttsManager.init(getApplicationContext());
-
-                //ConstraintLayout layout_principal = (ConstraintLayout)findViewById(R.id.layout_principal);
-                //LinearLayout layout_acciones_chiste = (LinearLayout)findViewById(R.id.layout_acciones_chiste);
 
                 if(mostrar.equals("2")){
                     ocultarAlertaEspera();
@@ -249,16 +245,32 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     TextView textViewChiste = (TextView) findViewById(view.getId());
                                     String textoChiste = textViewChiste.getText().toString();
 
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(textoChiste));
-                                    sendIntent.setType("text/plain");
-                                    sendIntent.setPackage("com.whatsapp");
+                                    textViewChiste.setDrawingCacheEnabled(true);
+                                    textViewChiste.buildDrawingCache();  // Creando un Bitmap del Texview el chiste
+                                    Uri url = saveImageExternal(textViewChiste.getDrawingCache());
+
+                                    if(Build.VERSION.SDK_INT>=24){
+                                        try{
+                                            Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                                            m.invoke(null);
+                                            Uri.fromFile(new File(String.valueOf(url)));
+                                        }catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    Intent sendIntent1 = new Intent();
+                                    sendIntent1.setAction(Intent.ACTION_SEND);
+                                    sendIntent1.setData(url);
+                                    sendIntent1.setType("image/*");
+                                    sendIntent1.setPackage("com.whatsapp");
+                                    sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
+                                    //sendIntent1.putExtra(Intent.EXTRA_STREAM, getResources().getIdentifier("com.my.app:drawable/"+parts[1], null, null));
                                     try {
-                                        startActivity(sendIntent);
+                                        startActivity(sendIntent1);
                                     }
                                     catch (ActivityNotFoundException ex) {
-                                        Toast.makeText(getApplicationContext(),"Por favor instala WhatsApp", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
                                     }
 
 
@@ -287,204 +299,33 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     TextView textViewChiste = (TextView) findViewById(view.getId());
                                     String textoChiste = textViewChiste.getText().toString();
 
-                                    /*
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(textoChiste));
-                                    sendIntent.setType("text/plain");
-                                    //sendIntent.setPackage("com.facebook.katana");
-                                    sendIntent.setPackage("com.facebook.orca");
-                                    try {
-                                        startActivity(sendIntent);
-                                    }
-                                    catch (ActivityNotFoundException ex) {
-                                        Toast.makeText(getApplicationContext(),"Por favor instala Facebook Messenger", Toast.LENGTH_LONG).show();
-                                    }*/
-
-
-                                    /*
-                                    textViewChiste.setDrawingCacheEnabled(true); // Enable drawing cache before calling the getDrawingCache() method
-                                    // Get bitmap object from the TextView
-                                    Bitmap tvImage= Bitmap.createBitmap(textViewChiste.getDrawingCache());
-                                    try {
-                                        // Save the bitmap object to file
-                                        tvImage.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(Environment.getExternalStorageDirectory()+"/tvimage.png"));
-                                    } catch (FileNotFoundException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-                                    */
-
                                     textViewChiste.setDrawingCacheEnabled(true);
                                     textViewChiste.buildDrawingCache();  // Creando un Bitmap del Texview el chiste
+                                    Uri url = saveImageExternal(textViewChiste.getDrawingCache());
 
-                                    Bitmap b1 = textViewChiste.getDrawingCache();
-
-                                    ImageView botonCompartirImagen = new ImageView(getApplicationContext());   // crear la imagen desde codigo
-                                    botonCompartirImagen.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)); // crear la imagen desde codigo
-                                    botonCompartirImagen.setId(5000);
-                                    botonCompartirImagen.setTag("maldita");
-                                    botonCompartirImagen.setImageBitmap(textViewChiste.getDrawingCache());
-                                    layout_chistes.addView(botonCompartirImagen);
-
-
-                                    int id = botonCompartirImagen.getId();
-
-                                    ImageView ejemplo = (ImageView)findViewById(id);
-
-                                    String name2 = ejemplo.getTag().toString();
-
-                                    String datos = ejemplo.getResources().toString();
-
-                                    String datos2 = ejemplo.getDrawable().toString();
-
-                                    //final File photoFile = new File(getFilesDir(), "maldita.bit");
-
-
-
-
-                                    Uri imageUri = Uri.parse("android.resource://" + getPackageName()+ "/mimap/"+R.mipmap.icono_whatsapp);
-                                    //Uri imageUri =  Uri.parse(photoFile);
-
-                                    //Modals nuevaModal = new Modals("Mensaje", imageUri.toString(), "Ok", MainActivity.this);
-                                    //nuevaModal.createModal();
-
-
+                                    if(Build.VERSION.SDK_INT>=24){
+                                        try{
+                                            Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                                            m.invoke(null);
+                                            Uri.fromFile(new File(String.valueOf(url)));
+                                        }catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
 
                                     Intent sendIntent1 = new Intent();
                                     sendIntent1.setAction(Intent.ACTION_SEND);
-                                    //Uri phototUri = Uri.parse(imageUri);
-                                    //sendIntent1.setData(imageUri);
+                                    sendIntent1.setData(url);
                                     sendIntent1.setType("image/*");
-                                    sendIntent1.putExtra(Intent.EXTRA_STREAM, imageUri);
+                                    sendIntent1.setPackage("com.facebook.orca");
+                                    sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
                                     //sendIntent1.putExtra(Intent.EXTRA_STREAM, getResources().getIdentifier("com.my.app:drawable/"+parts[1], null, null));
-
                                     try {
                                         startActivity(sendIntent1);
                                     }
                                     catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
                                     }
-
-
-
-
-
-
-
-                                    //BitmapDrawable bitmapDrawable = ((BitmapDrawable) botonCompartirImagen.getDrawable());
-                                    //Bitmap bitmap = bitmapDrawable .getBitmap();
-                                    //String bitmapPath = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap,"some title", null);
-
-
-                                    //getImageUri(getApplicationContext(),bitmap);
-
-
-
-                                    //ImageView ejemplo = (ImageView)findViewById(R.mipmap.icono_facebook);
-                                    //ejemplo.getDrawable().toString();
-
-
-                                    //Drawable img = getResources().getDrawable(R.mipmap.icono_facebook);
-                                    //String pathImage = img.toString();
-
-                                    //ImageView botonCompartirIma = (ImageView)findViewById(5000);
-
-                                    //Toast.makeText(getApplicationContext(), botonCompartirIma.getDrawable().toString(), Toast.LENGTH_LONG).show();
-
-
-                                    //String[] parts = botonCompartirIma.getDrawable().toString().split("@");
-
-                                    //Uri imageUri = Uri.parse(bitmapPath);
-                                    //Uri imageUri = Uri.parse("android.resource://" + getPackageName()+ "/drawable/" + parts[1]);
-                                    //Uri phototUri = Uri.parse(pathImage);
-
-
-
-
-                                    //String ruta = ejemplo.getDrawable().toString();
-
-
-
-
-                                    //Modals nuevaModal = new Modals("Mensaje", botonCompartirImagen.getDrawable().toString().toString(), "Ok", MainActivity.this);
-                                    //Modals nuevaModal = new Modals("Mensaje", pathImage, "Ok", MainActivity.this);
-                                    //nuevaModal.createModal();
-
-
-                                    //Toast.makeText(getApplicationContext(), botonCompartirIma.getDrawable().toString().toString(), Toast.LENGTH_LONG).show();
-
-
-                                    //int uri1 = 0;
-                                    //String drawable = "chiste5000";
-                                    //botonCompartirImagen.setImageDrawable(Drawable.createFromPath("@drawable/"+drawable));
-
-                                    
-                                    /*
-                                    try {
-                                        
-                                        File file = new File(botonCompartirImagen.getContext().getCacheDir(), bitmap + ".png");
-                                        FileOutputStream fOut = null;
-                                        fOut = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                                        fOut.flush();
-                                        fOut.close();
-                                        file.setReadable(true, false);
-                                        final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-                                        intent.setType("image/png");
-                                        context.startActivity(intent);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    */
-
-
-
-                                    /*
-
-
-                                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                                    sharingIntent.setType("image/gif");
-                                    sharingIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
-                                    startActivity(Intent.createChooser(sharingIntent, "Share Using"));
-
-                                    */
-
-
-                                    //ImageView imagencilla = (ImageView) findViewById(5000);
-                                    //ImageView a = (ImageView)findViewById(5000);
-                                    //a.setImageResource(R.drawable.mydrawable);
-
-                                    ///String uri = "@drawable/"+drawable;  // where myresource (without the extension) is the file
-
-                                   //
-
-                                    //ImageView a= (ImageView)findViewById(5000);
-                                    //Drawable res = getResources().getDrawable(imageResource);
-                                    //a.setImageDrawable(res);
-
-
-                                    //int imageResource = getResources().getIdentifier(parts[1], "drawable", getPackageName());
-
-                                    //Uri mImageUri = Uri.parse(getResources().getDrawable(imageResource).toString());
-                                   // Uri mImageUri = Uri.parse(R.drawable.);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                                 }
@@ -528,11 +369,34 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     TextView textViewChiste = (TextView) findViewById(view.getId());
                                     String textoChiste = textViewChiste.getText().toString();
 
-                                    Intent sendIntent = new Intent();
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, String.valueOf(textoChiste));
-                                    sendIntent.setType("text/plain");
-                                    startActivity(sendIntent);
+                                    textViewChiste.setDrawingCacheEnabled(true);
+                                    textViewChiste.buildDrawingCache();  // Creando un Bitmap del Texview el chiste
+                                    Uri url = saveImageExternal(textViewChiste.getDrawingCache());
+
+                                    if(Build.VERSION.SDK_INT>=24){
+                                        try{
+                                            Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
+                                            m.invoke(null);
+                                            Uri.fromFile(new File(String.valueOf(url)));
+                                        }catch(Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    Intent sendIntent1 = new Intent();
+                                    sendIntent1.setAction(Intent.ACTION_SEND);
+                                    sendIntent1.setData(url);
+                                    sendIntent1.setType("image/*");
+                                    sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
+                                    try {
+                                        startActivity(sendIntent1);
+                                    }
+                                    catch (ActivityNotFoundException ex) {
+                                        Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
+                                    }
+
+
+
                                 }
                             });
 
@@ -618,7 +482,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     //TextView textViewChiste = (TextView) findViewById(id_chiste);
                                     //String textoChiste = textViewChiste.getText().toString();
                                     //Toast.makeText(getApplicationContext(),textoChiste,Toast.LENGTH_LONG).show();
-                                    //Toast.makeText(getApplicationContext(),String.valueOf(id_chiste),Toast.LENGTH_LONG).show();
 
                                     guardarChisteFavorito((id_chiste),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/guardar_chiste_favorito.php");
 
@@ -724,12 +587,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         dialog.show();
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
+
 
     private void generarIdUsuario(String url){
 
@@ -943,9 +801,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         else if(bottomDetector <= 0 ) {
             x=x+1;
             String c = String.valueOf(x);
-            //Toast.makeText(getBaseContext(),"has llegado hasta abajo"+c,Toast.LENGTH_SHORT).show();
+
             if(c.equals("1")){
-                //Toast.makeText(getBaseContext(),"has llegado hasta abajo cuando vale "+c,Toast.LENGTH_SHORT).show();
 
                 mostrarAlertaCargando();
                 obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
@@ -958,8 +815,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     }
                 },2000);
-
-
 
             }
             else{
@@ -977,6 +832,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
+    private Uri saveImageExternal(Bitmap image) {
+        //TODO - Should be processed in another thread
 
+        Uri uri = null;
+        try {
+            File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "chiste.png");
+            FileOutputStream stream = new FileOutputStream(file);
+            image.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.close();
+            uri = Uri.fromFile(file);
+        } catch (IOException e) {
+            //Log.d(TAG, "IOException while trying to write file for sharing: " + e.getMessage());
+            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+        }
+        return uri;
+    }
 
 }
