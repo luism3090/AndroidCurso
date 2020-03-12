@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
-                            textViewChiste.setGravity(Gravity.CENTER_VERTICAL);
+                            textViewChiste.setGravity(Gravity.CENTER);
                             textViewChiste.setTextSize(24);
                             textViewChiste.setPadding(30,0,30,0);
                             textViewChiste.setId(id_chiste_db);  //
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                             contenedor.setOrientation(LinearLayout.HORIZONTAL);
                             //contenedor.setBackgroundColor(Color.rgb(20,50,90));
-                            contenedor.setPadding(25,-30,0,0);
+                            contenedor.setPadding(0,-30,0,0);
                             contenedor.setGravity(Gravity.CENTER_VERTICAL);
                             layout_chistes.addView(contenedor);
 

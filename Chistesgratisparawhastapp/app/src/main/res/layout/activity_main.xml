@@ -18,8 +18,8 @@
 
     <ScrollView
         android:id="@+id/scrol"
-        android:layout_width="match_parent"
-        android:layout_height="520dp"
+        android:layout_width="340dp"
+        android:layout_height="@dimen/scroll_small"
         android:layout_marginBottom="50dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/layout_contedor"

@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidStudioProjects-Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" filepath="$PROJECT_DIR$/AndroidStudioProjects-Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" group="Chistes gratis para whastapp" />
+      <module fileurl="file://$PROJECT_DIR$/app/AndroidStudioProjects-Chistesgratisparawhastapp-app.iml" filepath="$PROJECT_DIR$/app/AndroidStudioProjects-Chistesgratisparawhastapp-app.iml" group="Chistes gratis para whastapp/app" />
       <module fileurl="file://$PROJECT_DIR$/Chistes gratis para whastapp.iml" filepath="$PROJECT_DIR$/Chistes gratis para whastapp.iml" group="Chistes gratis para whastapp" />
       <module fileurl="file://$PROJECT_DIR$/Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" filepath="$PROJECT_DIR$/Chistesgratisparawhastapp-Chistes gratis para whastapp.iml" group="Chistes gratis para whastapp" />
       <module fileurl="file://$PROJECT_DIR$/app/Chistesgratisparawhastapp-app.iml" filepath="$PROJECT_DIR$/app/Chistesgratisparawhastapp-app.iml" group="Chistes gratis para whastapp/app" />
