@@ -2,19 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_principal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".CategoriasActivity">
 
 
-    <!--
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/mirefresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-      -->
     <LinearLayout
         android:id="@+id/layout_contedor"
         android:layout_width="409dp"
@@ -39,7 +31,7 @@
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_home1"
-                android:visibility="gone"></ImageView>
+                android:visibility="visible"></ImageView>
 
             <ImageView
                 android:id="@+id/image_home2"
@@ -49,28 +41,28 @@
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_home2"
-                android:visibility="visible"></ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@+id/image_categorias1"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/image_home2"
+                android:layout_toRightOf="@id/image_home1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_categorias1"
-                android:visibility="visible"></ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@+id/image_categorias2"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
-                android:layout_toRightOf="@id/image_home2"
+                android:layout_toRightOf="@id/image_home1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_categorias2"
-                android:visibility="gone"></ImageView>
+                android:visibility="visible"></ImageView>
 
             <ImageView
                 android:id="@+id/image_favoritos1"
@@ -78,7 +70,7 @@
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="-1dp"
-                android:layout_toRightOf="@id/image_categorias1"
+                android:layout_toRightOf="@id/image_categorias2"
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_favoritos1"
@@ -88,7 +80,7 @@
                 android:id="@+id/image_favoritos2"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
-                android:layout_toRightOf="@id/image_categorias1"
+                android:layout_toRightOf="@id/image_categorias2"
                 android:background="@color/white"
                 android:paddingTop="5dp"
                 android:src="@mipmap/icono_favoritos2"

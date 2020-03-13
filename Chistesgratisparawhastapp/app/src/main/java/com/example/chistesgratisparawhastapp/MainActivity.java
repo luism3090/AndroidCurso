@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View v) {
 
+                /*
                 //image_categorias1.setVisibility(View.GONE);
                 image_categorias2.setVisibility(View.VISIBLE);
 
@@ -144,6 +145,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 image_home1.setVisibility(View.VISIBLE);
                 image_favoritos1.setVisibility(View.VISIBLE);
                 image_nuevos1.setVisibility(View.VISIBLE);
+                */
+
+                Intent categorias = new Intent(getApplicationContext(),CategoriasActivity.class);
+                startActivity(categorias);
 
             }
         });
@@ -288,14 +293,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
-
-                            // --------------------------------------- Creando el espacio entre chistes ---------------------------------
-
-                            Space espacioEntreChiste = new Space(getApplicationContext());
-                            //Space espacioEntreChiste = new Space((Context) context);
-                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            espacioEntreChiste.setMinimumHeight(150);
-                            layout_chistes.addView(espacioEntreChiste);
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
@@ -612,6 +609,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 }
 
                             });
+
+                            // --------------------------------------- Creando el espacio entre chistes ---------------------------------
+
+                            Space espacioEntreChiste = new Space(getApplicationContext());
+                            //Space espacioEntreChiste = new Space((Context) context);
+                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            espacioEntreChiste.setMinimumHeight(150);
+                            layout_chistes.addView(espacioEntreChiste);
+
 
                         }
                             String rowsPref = mipreferencia_TotalRows.getString("totalRows","");

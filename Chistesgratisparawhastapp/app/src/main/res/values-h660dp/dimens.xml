@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<dimen name="scroll_media">570dp</dimen>
+<dimen name="scroll_height">660dp</dimen>
 </resources>
