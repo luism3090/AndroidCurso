@@ -1,8 +1,6 @@
 package com.example.chistesgratisparawhastapp;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -35,7 +33,6 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -55,32 +52,38 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
+public class ChistesCategoriaActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
-
-    SwipeRefreshLayout miSwipeRefreshLayout;
     ProgressDialog dialog;
+
     TTSManager ttsManager = null;
 
-    SharedPreferences mipreferencia_user;
-    SharedPreferences mipreferencia_TotalRows;
+    SharedPreferences mipreferencia_user, mipreferencia_TotalRows, mipreferencia_categoria;
 
 //    ImageView image_home1,image_home2,image_categorias1,image_categorias2,image_favoritos1,image_favoritos2,image_nuevos1,image_nuevos2;
 
     ScrollView sv_main;
     int x=0;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chistes_categoria);
 
+        String id_categoria = getIntent().getStringExtra("id_categoria");
+        String titulo_categoria = getIntent().getStringExtra("titulo_categoria");
+        String id_usuario = getIntent().getStringExtra("id_usuario");
 
-        //miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
+        sv_main = (ScrollView)findViewById(R.id.scrol);
 
+        sv_main.setOnTouchListener(this);
+        sv_main.getViewTreeObserver().addOnScrollChangedListener(this);
 
-        //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+        getSupportActionBar().setTitle(titulo_categoria);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sv_main = (ScrollView)findViewById(R.id.scrol);
 
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
@@ -92,190 +95,57 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
         final ImageView image_nuevos2 = (ImageView)findViewById(R.id.image_nuevos2);
 
-        image_home1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                        LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-                        layout_chistes.removeAllViews();
-
-                        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-                        obj_editor2.putString("totalRows","0");
-                        obj_editor2.commit();
-
-                        mostrarAlertaEspera();
-                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
-
-                        image_home1.setVisibility(View.GONE);
-                        image_home2.setVisibility(View.VISIBLE);
-
-                        // VISIBLES TODOS LOS QUE LLEVAN POR 1
-
-                        image_categorias1.setVisibility(View.VISIBLE);
-                        image_favoritos1.setVisibility(View.VISIBLE);
-                        image_nuevos1.setVisibility(View.VISIBLE);
-
-
-                        // INVISIBLES TODOS LOS QUE LLEVAN 2
-                        image_categorias2.setVisibility(View.GONE);
-                        image_favoritos2.setVisibility(View.GONE);
-                        image_nuevos2.setVisibility(View.GONE);
-
-            }
-
-
-        });
-
-
-        image_categorias1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                /*
-                //image_categorias1.setVisibility(View.GONE);
-                image_categorias2.setVisibility(View.VISIBLE);
-
-                // INVISIBLES TODOS LOS QUE LLEVAN 2
-
-                image_home2.setVisibility(View.GONE);
-                image_favoritos2.setVisibility(View.GONE);
-                image_nuevos2.setVisibility(View.GONE);
-
-                // VISIBLES TODOS LOS QUE LLEVAN POR 1
-
-                image_home1.setVisibility(View.VISIBLE);
-                image_favoritos1.setVisibility(View.VISIBLE);
-                image_nuevos1.setVisibility(View.VISIBLE);
-                */
-
-                Intent categorias = new Intent(getApplicationContext(),CategoriasActivity.class);
-
-                categorias.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
-
-                startActivity(categorias);
-
-            }
-        });
-
-        image_favoritos1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //image_favoritos1.setVisibility(View.GONE);
-                image_favoritos2.setVisibility(View.VISIBLE);
-
-                // VISIBLES TODOS LOS QUE LLEVAN POR 1
-
-                image_home1.setVisibility(View.VISIBLE);
-                image_categorias1.setVisibility(View.VISIBLE);
-                image_nuevos1.setVisibility(View.VISIBLE);
-
-
-                // INVISIBLES TODOS LOS QUE LLEVAN 2
-
-                image_home2.setVisibility(View.GONE);
-                image_categorias2.setVisibility(View.GONE);
-                image_nuevos2.setVisibility(View.GONE);
-
-            }
-        });
-
-        image_nuevos1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //image_favoritos1.setVisibility(View.GONE);
-                image_nuevos2.setVisibility(View.VISIBLE);
-
-                // VISIBLES TODOS LOS QUE LLEVAN POR 1
-
-                image_home1.setVisibility(View.VISIBLE);
-                image_categorias1.setVisibility(View.VISIBLE);
-                image_favoritos1.setVisibility(View.VISIBLE);
-
-
-                // INVISIBLES TODOS LOS QUE LLEVAN 2
-
-                image_home2.setVisibility(View.GONE);
-                image_categorias2.setVisibility(View.GONE);
-                image_favoritos2.setVisibility(View.GONE);
-
-            }
-        });
-
-
-
-        sv_main.setOnTouchListener(this);
-        sv_main.getViewTreeObserver().addOnScrollChangedListener(this);
+        mipreferencia_categoria = getSharedPreferences("datos_categoria", Context.MODE_PRIVATE);
+        SharedPreferences.Editor obj_editor0  = mipreferencia_categoria.edit();
+        obj_editor0.putString("id_categoria",id_categoria);
+        obj_editor0.commit();
 
         mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
-        String id_usuario = mipreferencia_user.getString("id_usuario","");
+        SharedPreferences.Editor obj_editor1  = mipreferencia_user.edit();
+        obj_editor1.putString("id_usuario",id_usuario);
+        obj_editor1.commit();
 
         mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
         SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
         obj_editor2.putString("totalRows","0");
         obj_editor2.commit();
 
-        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
-
         mostrarAlertaEspera();
-        if(id_usuario.equals("")){
-            generarIdUsuario("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/generar_id_usuario.php");
-        }
-        else{
-            obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
-        }
+        obtenerChistesCategoria("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_categoria.php",mipreferencia_categoria.getString("id_categoria",""));
 
-        /*
 
-        miSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        image_home1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRefresh() {
-
-                LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-
-                layout_chistes.removeAllViews();
-                mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-                obj_editor2.putString("totalRows","0");
-                obj_editor2.commit();
-                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        miSwipeRefreshLayout.setRefreshing(false);
-
-                    }
-                },2000);
-
-
+            public void onClick(View v) {
+                Intent inicio = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(inicio);
             }
         });
 
-        */
 
 
     }
 
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
 
-    private void obtenerChistes(String url, final String mostrar){
+        return true;
+    }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+    private void obtenerChistesCategoria(String url, final String id_categoria){
+
+        com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
                 final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
 
-                ttsManager = new TTSManager();
+                final TTSManager ttsManager = new TTSManager();
                 ttsManager.init(getApplicationContext());
 
-                if(mostrar.equals("2")){
-                    ocultarAlertaEspera();
-                }
+                ocultarAlertaEspera();
 
                 try {
 
@@ -625,30 +495,30 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
 
                         }
-                            String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
-                            int regs = Integer.parseInt(rowsPref)+5;
-                            String TotalRows = String.valueOf(regs);
+                        String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
+                        int regs = Integer.parseInt(rowsPref)+5;
+                        String TotalRows = String.valueOf(regs);
 
-                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-                            obj_editor2.putString("totalRows","");
-                            obj_editor2.commit();
+                        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+                        obj_editor2.putString("totalRows","");
+                        obj_editor2.commit();
 
-                            //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_b", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_b", Toast.LENGTH_LONG).show();
 
-                            mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor obj_editor1  = mipreferencia_TotalRows.edit();
-                            obj_editor1.putString("totalRows",String.valueOf(TotalRows));
-                            obj_editor1.commit();
+                        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor obj_editor1  = mipreferencia_TotalRows.edit();
+                        obj_editor1.putString("totalRows",String.valueOf(TotalRows));
+                        obj_editor1.commit();
 
-                            //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
 
-                           // Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows","")+"b", "Ok", MainActivity.this);
-                           // nuevaModal.createModal();
+                        // Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows","")+"b", "Ok", MainActivity.this);
+                        // nuevaModal.createModal();
 
                     }else{
 
-                        Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", MainActivity.this);
+                        Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", ChistesCategoriaActivity.this);
                         nuevaModal.createModal();
 
                     }
@@ -676,6 +546,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 parametros.put("id_usuario",id_usuario);
                 parametros.put("totalRows",totalRows);
+                parametros.put("id_categoria",id_categoria);
 
                 return parametros;
             }
@@ -685,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void mostrarAlertaEspera(){
-        dialog = new ProgressDialog(MainActivity.this);
+        dialog = new ProgressDialog(ChistesCategoriaActivity.this);
         dialog.setMessage("Espere por favor...");
         dialog.setCancelable(false);
         dialog.show();
@@ -697,87 +568,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     private void mostrarAlertaCargando(){
-        dialog = new ProgressDialog(MainActivity.this);
+        dialog = new ProgressDialog(ChistesCategoriaActivity.this);
         dialog.setMessage("Cargando mas chistes...");
         dialog.setCancelable(false);
         dialog.show();
     }
 
-
-
-    private void generarIdUsuario(String url){
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-
-            @Override
-            public void onResponse(String response) {
-                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
-
-                //ocultarAlertaEspera();
-                try {
-
-                    JSONObject responseJSON = new JSONObject(response);
-
-                    String mensaje = responseJSON.getString("mensaje");
-                    String error = responseJSON.getString("error");
-                    String resultado = responseJSON.getString("resultado");
-
-                    if (resultado.equals("OK")) {
-
-                        mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor obj_editor  = mipreferencia_user.edit();
-                        obj_editor.putString("id_usuario",mensaje);
-                        obj_editor.commit();
-
-                        //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_LONG).show();
-
-                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
-
-                    } else if (resultado.equals("WARNING")) {
-
-                        Modals nuevaModal = new Modals("Mensaje", mensaje, "OK", MainActivity.this);
-                        nuevaModal.createModal();
-
-
-                    }else{
-
-                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
-                        nuevaModal.createModal();
-
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "cayo en el catch", Toast.LENGTH_LONG).show();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> parametros = new HashMap<String,String>();
-
-                String id_usuario = mipreferencia_user.getString("id_usuario","");
-
-                parametros.put("id_usuario",id_usuario);
-
-                return parametros;
-            }
-        };
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-
-    }
-
-
     private void guardarChisteFavorito(final int id_chiste, final String id_usuario, final int id_boton_favorito_normal, final int id_boton_favorito_rojo, String url){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -800,7 +599,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                     else{
 
-                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", ChistesCategoriaActivity.this);
                         nuevaModal.createModal();
 
                     }
@@ -838,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void eliminarChisteFavorito(final int id_chiste, final String id_usuario, final int id_boton_favorito_normal, final int id_boton_favorito_rojo, String url)
     {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        com.android.volley.toolbox.StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
@@ -861,7 +660,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     }
                     else{
 
-                        Modals nuevaModal = new Modals("Mensaje", error, "OK", MainActivity.this);
+                        Modals nuevaModal = new Modals("Mensaje", error, "OK", ChistesCategoriaActivity.this);
                         nuevaModal.createModal();
 
                     }
@@ -904,6 +703,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public void onScrollChanged() {
+
         View view = (View) sv_main.getChildAt(sv_main.getChildCount() - 1);
         int topDetector = sv_main.getScrollY();
         int bottomDetector = view.getBottom() -  (sv_main.getHeight() + sv_main.getScrollY());
@@ -921,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             if(c.equals("1")){
 
                 mostrarAlertaCargando();
-                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
+                obtenerChistesCategoria("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_categoria.php",mipreferencia_categoria.getString("id_categoria",""));
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
