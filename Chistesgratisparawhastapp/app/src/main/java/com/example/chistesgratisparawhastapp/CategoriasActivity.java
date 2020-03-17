@@ -120,6 +120,19 @@ public class CategoriasActivity extends AppCompatActivity {
             }
         });
 
+        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+
+                nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
+
+                startActivity(nuevosChistes);
+
+            }
+        });
+
 
 
     }

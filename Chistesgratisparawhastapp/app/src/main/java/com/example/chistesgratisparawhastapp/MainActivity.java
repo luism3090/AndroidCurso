@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     ScrollView sv_main;
     int x=0;
+    boolean masChistes = true;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -123,21 +124,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View v) {
 
-                //image_favoritos1.setVisibility(View.GONE);
-                image_nuevos2.setVisibility(View.VISIBLE);
+                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
 
-                // VISIBLES TODOS LOS QUE LLEVAN POR 1
+                nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
-                image_home1.setVisibility(View.VISIBLE);
-                image_categorias1.setVisibility(View.VISIBLE);
-                image_favoritos1.setVisibility(View.VISIBLE);
-
-
-                // INVISIBLES TODOS LOS QUE LLEVAN 2
-
-                image_home2.setVisibility(View.GONE);
-                image_categorias2.setVisibility(View.GONE);
-                image_favoritos2.setVisibility(View.GONE);
+                startActivity(nuevosChistes);
 
             }
         });
@@ -328,10 +319,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             ImageButton botonFacebook = new ImageButton(getApplicationContext());
                             //botonFacebook.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             botonFacebook.setLayoutParams(new ActionBar.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            botonFacebook.setImageResource(R.mipmap.icono_facebook);
+                            botonFacebook.setImageResource(R.mipmap.icono_messenger);
                             botonFacebook.setBackgroundColor(Color.TRANSPARENT);
-                            botonFacebook.setPadding(12,25,0,0);
-                            //botonFacebook.setMaxHeight(55);
+                            botonFacebook.setPadding(12,28,0,0);
+                            //botonFacebook.setMinimumHeight(50);
                             botonFacebook.setId(id_chiste_db);
                             contenedor.addView(botonFacebook);
                             //layout_chistes.addView(botonFacebook);
@@ -395,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     ClipData clip = ClipData.newPlainText("text",  textoChiste);
                                     copiarTexto.setPrimaryClip(clip);
 
-                                    Toast.makeText(getApplicationContext(),"El texto del chiste se ha copiado",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),"El texto del chiste ha sido copiado",Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -588,6 +579,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", MainActivity.this);
                         nuevaModal.createModal();
+                        masChistes = false;
 
                     }
 
@@ -859,26 +851,29 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             //shadow_top.setVisibility(View.INVISIBLE);
         }
         else if(bottomDetector <= 0 ) {
-            x=x+1;
-            String c = String.valueOf(x);
 
-            if(c.equals("1")){
+            if(masChistes) {
 
-                mostrarAlertaCargando();
-                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
+                    x = x + 1;
+                    String c = String.valueOf(x);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    if (c.equals("1")) {
 
-                        ocultarAlertaEspera();
+                        mostrarAlertaCargando();
+                        obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php", "1");
 
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                ocultarAlertaEspera();
+
+                            }
+                        }, 2000);
+
+                    } else {
+                        //Toast.makeText(getBaseContext(),"has llegado hasta abajo pero cayo en el else"+c,Toast.LENGTH_SHORT).show();
                     }
-                },2000);
-
-            }
-            else{
-                //Toast.makeText(getBaseContext(),"has llegado hasta abajo pero cayo en el else"+c,Toast.LENGTH_SHORT).show();
             }
 
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View bottom reached");

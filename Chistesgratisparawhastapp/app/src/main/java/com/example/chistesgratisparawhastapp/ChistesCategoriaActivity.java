@@ -64,6 +64,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
     ScrollView sv_main;
     int x=0;
+    boolean masChistes = true;
 
 
     @Override
@@ -131,6 +132,19 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
                 favoritos.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
                 startActivity(favoritos);
+
+            }
+        });
+
+        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+
+                nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
+
+                startActivity(nuevosChistes);
 
             }
         });
@@ -271,9 +285,9 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
                             ImageButton botonFacebook = new ImageButton(getApplicationContext());
                             //botonFacebook.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             botonFacebook.setLayoutParams(new ActionBar.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            botonFacebook.setImageResource(R.mipmap.icono_facebook);
+                            botonFacebook.setImageResource(R.mipmap.icono_messenger);
                             botonFacebook.setBackgroundColor(Color.TRANSPARENT);
-                            botonFacebook.setPadding(12,25,0,0);
+                            botonFacebook.setPadding(12,28,0,0);
                             //botonFacebook.setMaxHeight(55);
                             botonFacebook.setId(id_chiste_db);
                             contenedor.addView(botonFacebook);
@@ -531,6 +545,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
                         Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", ChistesCategoriaActivity.this);
                         nuevaModal.createModal();
+                        masChistes = false;
 
                     }
 
@@ -725,31 +740,33 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
         if(topDetector <= 0) {
 
-            //Toast.makeText(getBaseContext(),"Scroll View top reached",Toast.LENGTH_SHORT).show();
-            //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
-            //shadow_top.setVisibility(View.INVISIBLE);
         }
         else if(bottomDetector <= 0 ) {
-            x=x+1;
-            String c = String.valueOf(x);
 
-            if(c.equals("1")){
+            if (masChistes) {
 
-                mostrarAlertaCargando();
-                obtenerChistesCategoria("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_categoria.php",mipreferencia_categoria.getString("id_categoria",""));
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                x = x + 1;
+                String c = String.valueOf(x);
 
-                        ocultarAlertaEspera();
+                if (c.equals("1")) {
 
-                    }
-                },2000);
+                    mostrarAlertaCargando();
+                    obtenerChistesCategoria("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_categoria.php", mipreferencia_categoria.getString("id_categoria", ""));
 
-            }
-            else{
-                //Toast.makeText(getBaseContext(),"has llegado hasta abajo pero cayo en el else"+c,Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            ocultarAlertaEspera();
+
+                        }
+                    }, 2000);
+
+                } else {
+                    //Toast.makeText(getBaseContext(),"has llegado hasta abajo pero cayo en el else"+c,Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View bottom reached");
