@@ -122,7 +122,18 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
             }
         });
 
+        image_favoritos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent favoritos = new Intent(getApplicationContext(),FavoritosActivity.class);
+
+                favoritos.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
+
+                startActivity(favoritos);
+
+            }
+        });
 
     }
 
@@ -533,7 +544,9 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                ocultarAlertaEspera();
+                Toast.makeText(getApplicationContext(), "Error al conectarse a internet", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -594,7 +607,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
                     if (resultado.equals("OK")) {
 
-                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
 
                     }
                     else{
@@ -614,7 +627,8 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Error al conectarse a internet", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -655,7 +669,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
                     if (resultado.equals("OK")) {
 
-                        Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
 
                     }
                     else{
@@ -675,7 +689,8 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Error al conectarse a internet", Toast.LENGTH_LONG).show();
             }
         }){
             @Override

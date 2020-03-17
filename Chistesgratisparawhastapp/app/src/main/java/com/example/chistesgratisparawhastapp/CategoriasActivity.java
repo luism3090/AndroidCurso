@@ -82,6 +82,8 @@ public class CategoriasActivity extends AppCompatActivity {
 
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
         final ImageView image_home2 = (ImageView)findViewById(R.id.image_home2);
+        final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
+        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
 
         mipreferencia_categoria = getSharedPreferences("datos_categoria", Context.MODE_PRIVATE);
         SharedPreferences.Editor obj_editor0  = mipreferencia_categoria.edit();
@@ -104,6 +106,21 @@ public class CategoriasActivity extends AppCompatActivity {
                                 startActivity(inicio);
                         }
         });
+
+        image_favoritos1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent favoritos = new Intent(getApplicationContext(),FavoritosActivity.class);
+
+                favoritos.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
+
+                startActivity(favoritos);
+
+            }
+        });
+
+
 
     }
 
@@ -213,7 +230,9 @@ public class CategoriasActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+                ocultarAlertaEspera();
+                Toast.makeText(getApplicationContext(), "Error al conectarse a internet", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
