@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         startActivity(sendIntent1);
                                     }
                                     catch (ActivityNotFoundException ex) {
-                                        Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale WhatsApp", Toast.LENGTH_LONG).show();
                                     }
 
 
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         startActivity(sendIntent1);
                                     }
                                     catch (ActivityNotFoundException ex) {
-                                        Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale Facebook Messenger", Toast.LENGTH_LONG).show();
                                     }
 
 
