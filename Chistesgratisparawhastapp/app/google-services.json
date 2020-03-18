@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "114253585479",
+    "firebase_url": "https://chistes-gratis-para-whatsapp.firebaseio.com",
+    "project_id": "chistes-gratis-para-whatsapp",
+    "storage_bucket": "chistes-gratis-para-whatsapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114253585479:android:194e2cc9867dfcaa8c6562",
+        "android_client_info": {
+          "package_name": "com.example.chistesgratisparawhastapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "114253585479-attp3kg8c6lv1df593j9a3ncuas865kl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCa8ieCGeGr6BaoVGCgFXvGCw3u7TOWDPY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "114253585479-attp3kg8c6lv1df593j9a3ncuas865kl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
