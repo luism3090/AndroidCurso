@@ -88,8 +88,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
         final ImageView image_categorias2 = (ImageView)findViewById(R.id.image_categorias2);
         final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
         final ImageView image_favoritos2 = (ImageView)findViewById(R.id.image_favoritos2);
-        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
-        final ImageView image_nuevos2 = (ImageView)findViewById(R.id.image_nuevos2);
+        final ImageView image_busqueda1 = (ImageView)findViewById(R.id.image_busqueda1);
 
 
         mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
@@ -103,7 +102,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
         obj_editor2.commit();
 
         mostrarAlertaEspera();
-        obtenerChistesFavoritos("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_favoritos.php");
+        obtenerChistesFavoritos("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_favoritos.php",true);
 
 
         image_home1.setOnClickListener(new View.OnClickListener() {
@@ -127,11 +126,11 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
             }
         });
 
-        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+        image_busqueda1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+                Intent nuevosChistes = new Intent(getApplicationContext(), BusquedaChistesActivity.class);
 
                 nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
@@ -149,7 +148,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
         return true;
     }
 
-    private void obtenerChistesFavoritos(String url){
+    private void obtenerChistesFavoritos(String url, final boolean showMensajeNoHayChistes){
 
         com.android.volley.toolbox.StringRequest stringRequest = new com.android.volley.toolbox.StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @SuppressLint("ResourceType")
@@ -553,9 +552,23 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
 
                     }else{
 
-                       Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", FavoritosActivity.this);
-                       nuevaModal.createModal();
-                       masChistes = false;
+                        if(showMensajeNoHayChistes){
+
+                            TextView textViewNoHayChistes = new TextView(getApplicationContext());
+                            textViewNoHayChistes.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            textViewNoHayChistes.setText("No tienes chistes favoritos");
+                            textViewNoHayChistes.setGravity(Gravity.CENTER);
+                            textViewNoHayChistes.setPadding(0,200,0,0);
+                            textViewNoHayChistes.setTextSize(24);
+                            textViewNoHayChistes.setTextColor(Color.rgb(0,0,0));
+                            layout_chistes.addView(textViewNoHayChistes);
+                        }
+                        else{
+                            Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", FavoritosActivity.this);
+                            nuevaModal.createModal();
+                            masChistes = false;
+                        }
+
 
                     }
 
@@ -680,7 +693,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
             @Override
             public void onResponse(String response) {
 
-                //Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
 
                 //ocultarAlertaEspera();
                 try {
@@ -692,8 +705,6 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                     String resultado = responseJSON.getString("resultado");
 
                     if (resultado.equals("OK")) {
-
-                        //Toast.makeText(getApplicationContext(), mensaje, Toast.LENGTH_SHORT).show();
 
                     }
                     else{
@@ -763,7 +774,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                 if(c.equals("1")){
 
                     mostrarAlertaCargando();
-                    obtenerChistesFavoritos("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_favoritos.php");
+                    obtenerChistesFavoritos("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes_favoritos.php",false);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

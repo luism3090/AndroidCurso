@@ -88,24 +88,24 @@
 
 
             <ImageView
-                android:id="@+id/image_nuevos1"
+                android:id="@+id/image_busqueda1"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/image_favoritos1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
-                android:src="@mipmap/icono_nuevos1"
+                android:src="@mipmap/icono_busqueda1"
                 android:visibility="visible"></ImageView>
 
             <ImageView
-                android:id="@+id/image_nuevos2"
+                android:id="@+id/image_busqueda2"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_toRightOf="@id/image_favoritos1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
-                android:src="@mipmap/icono_nuevos2"
+                android:src="@mipmap/icono_busqueda2"
                 android:visibility="gone"></ImageView>
 
 

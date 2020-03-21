@@ -1,17 +1,21 @@
 package com.example.chistesgratisparawhastapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,9 +48,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,13 +66,16 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
+    SharedPreferences mipreferencia_user;
+    SharedPreferences mipreferencia_TotalRows;
+
+    //public static final String MENSAJE = "MENSAJE";
+
+    //private BroadcastReceiver BR;
 
     SwipeRefreshLayout miSwipeRefreshLayout;
     ProgressDialog dialog;
     TTSManager ttsManager = null;
-
-    SharedPreferences mipreferencia_user;
-    SharedPreferences mipreferencia_TotalRows;
 
 //    ImageView image_home1,image_home2,image_categorias1,image_categorias2,image_favoritos1,image_favoritos2,image_nuevos1,image_nuevos2;
 
@@ -84,22 +93,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         FirebaseMessaging.getInstance().subscribeToTopic("humor");
         //String token = FirebaseInstanceId.getInstance().getToken();
 
+        mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
+        String id_usuario = mipreferencia_user.getString("id_usuario","");
 
-        //miSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.mirefresh);
+        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+        SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+        obj_editor2.putString("totalRows","0");
+        obj_editor2.commit();
 
+        Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
 
-        //LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
         sv_main = (ScrollView)findViewById(R.id.scrol);
 
-        final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
-        final ImageView image_home2 = (ImageView)findViewById(R.id.image_home2);
         final ImageView image_categorias1 = (ImageView)findViewById(R.id.image_categorias1);
-        final ImageView image_categorias2 = (ImageView)findViewById(R.id.image_categorias2);
         final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
-        final ImageView image_favoritos2 = (ImageView)findViewById(R.id.image_favoritos2);
-        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
-        final ImageView image_nuevos2 = (ImageView)findViewById(R.id.image_nuevos2);
-
+        final ImageView image_busqueda1 = (ImageView)findViewById(R.id.image_busqueda1);
 
         image_categorias1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,11 +135,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
 
-        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+        image_busqueda1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+                Intent nuevosChistes = new Intent(getApplicationContext(), BusquedaChistesActivity.class);
 
                 nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
@@ -145,16 +153,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         sv_main.setOnTouchListener(this);
         sv_main.getViewTreeObserver().addOnScrollChangedListener(this);
 
-        mipreferencia_user = getSharedPreferences("datos_usuario", Context.MODE_PRIVATE);
-        String id_usuario = mipreferencia_user.getString("id_usuario","");
-
-        mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-        SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-        obj_editor2.putString("totalRows","0");
-        obj_editor2.commit();
-
-        //Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
-
         mostrarAlertaEspera();
         if(id_usuario.equals("")){
             generarIdUsuario("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/generar_id_usuario.php");
@@ -162,40 +160,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         else{
             obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
         }
-
-        /*
-
-        miSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+/*
+        BR = new BroadcastReceiver() {
             @Override
-            public void onRefresh() {
-
-                LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-
-                layout_chistes.removeAllViews();
-                mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-                obj_editor2.putString("totalRows","0");
-                obj_editor2.commit();
-                obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","1");
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        miSwipeRefreshLayout.setRefreshing(false);
-
-                    }
-                },2000);
-
-
-            }
-        });
-
-        */
-
+            public void onReceive(Context context, Intent intent) {
+                //String chiste = intent.getStringExtra("chiste");
+                //Toast.makeText(MainActivity.this,chiste, Toast.LENGTH_SHORT).show();
+        }
+        };
+*/
 
     }
 
+    /*
+    protected void onPause(){
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(BR);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(BR,new IntentFilter(MENSAJE));
+    }
+
+    */
 
 
     private void obtenerChistes(String url, final String mostrar){

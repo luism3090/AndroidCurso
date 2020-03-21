@@ -88,13 +88,8 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
         sv_main = (ScrollView)findViewById(R.id.scrol);
 
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
-        final ImageView image_home2 = (ImageView)findViewById(R.id.image_home2);
-        final ImageView image_categorias1 = (ImageView)findViewById(R.id.image_categorias1);
-        final ImageView image_categorias2 = (ImageView)findViewById(R.id.image_categorias2);
         final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
-        final ImageView image_favoritos2 = (ImageView)findViewById(R.id.image_favoritos2);
-        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
-        final ImageView image_nuevos2 = (ImageView)findViewById(R.id.image_nuevos2);
+        final ImageView image_busqueda1 = (ImageView)findViewById(R.id.image_busqueda1);
 
         mipreferencia_categoria = getSharedPreferences("datos_categoria", Context.MODE_PRIVATE);
         SharedPreferences.Editor obj_editor0  = mipreferencia_categoria.edit();
@@ -136,11 +131,11 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
             }
         });
 
-        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+        image_busqueda1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+                Intent nuevosChistes = new Intent(getApplicationContext(), BusquedaChistesActivity.class);
 
                 nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 

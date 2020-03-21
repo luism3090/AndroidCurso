@@ -3,36 +3,21 @@ package com.example.chistesgratisparawhastapp;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.StrictMode;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -47,10 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +64,7 @@ public class CategoriasActivity extends AppCompatActivity {
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
         final ImageView image_home2 = (ImageView)findViewById(R.id.image_home2);
         final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
-        final ImageView image_nuevos1 = (ImageView)findViewById(R.id.image_nuevos1);
+        final ImageView image_busqueda1 = (ImageView)findViewById(R.id.image_busqueda1);
 
         mipreferencia_categoria = getSharedPreferences("datos_categoria", Context.MODE_PRIVATE);
         SharedPreferences.Editor obj_editor0  = mipreferencia_categoria.edit();
@@ -120,11 +101,11 @@ public class CategoriasActivity extends AppCompatActivity {
             }
         });
 
-        image_nuevos1.setOnClickListener(new View.OnClickListener() {
+        image_busqueda1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent nuevosChistes = new Intent(getApplicationContext(),NuevosChistesActivity.class);
+                Intent nuevosChistes = new Intent(getApplicationContext(), BusquedaChistesActivity.class);
 
                 nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 

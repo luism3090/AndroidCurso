@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NuevosChistesActivity">
+    tools:context=".BusquedaChistesActivity">
 
     <LinearLayout
         android:id="@+id/layout_contedor"
@@ -87,24 +87,24 @@
 
 
             <ImageView
-                android:id="@+id/image_nuevos1"
+                android:id="@+id/image_busqueda1"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/image_favoritos1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
-                android:src="@mipmap/icono_nuevos1"
+                android:src="@mipmap/icono_busqueda1"
                 android:visibility="gone"></ImageView>
 
             <ImageView
-                android:id="@+id/image_nuevos2"
+                android:id="@+id/image_busqueda2"
                 android:layout_width="100dp"
                 android:layout_height="45dp"
                 android:layout_toRightOf="@id/image_favoritos1"
                 android:background="@color/white"
                 android:paddingTop="5dp"
-                android:src="@mipmap/icono_nuevos2"
+                android:src="@mipmap/icono_busqueda2"
                 android:visibility="visible"></ImageView>
 
 
@@ -113,30 +113,60 @@
     </LinearLayout>
 
 
-    <ScrollView
-        android:id="@+id/scrol"
-        android:layout_width="338dp"
-        android:layout_height="@dimen/scroll_height"
-        android:orientation="vertical"
+    <LinearLayout
+        android:id="@+id/ly_cont_busqueda_chistes"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.461"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_contedor">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Buscar chiste"
+            android:textSize="18sp"
+            android:textStyle="bold">
 
-        <LinearLayout
-            android:id="@+id/layout_chistes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
+        </TextView>
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+
+    </LinearLayout>
+
+    <ScrollView
+            android:id="@+id/scrol"
+            android:layout_width="338dp"
+            android:layout_height="@dimen/scroll_height"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/ly_cont_busqueda_chistes">
 
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_chistes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    </ScrollView>
+
+            </LinearLayout>
+
+        </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
