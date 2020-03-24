@@ -3,6 +3,7 @@ package com.example.chistesgratisparawhastapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -69,19 +70,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     SharedPreferences mipreferencia_user;
     SharedPreferences mipreferencia_TotalRows;
 
-    //public static final String MENSAJE = "MENSAJE";
-
-    //private BroadcastReceiver BR;
-
     SwipeRefreshLayout miSwipeRefreshLayout;
     ProgressDialog dialog;
     TTSManager ttsManager = null;
 
-//    ImageView image_home1,image_home2,image_categorias1,image_categorias2,image_favoritos1,image_favoritos2,image_nuevos1,image_nuevos2;
-
     ScrollView sv_main;
     int x=0;
     boolean masChistes = true;
+
+    private static final String AUTHORITY="com.commonsware.android.cp.v4file";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         obj_editor2.putString("totalRows","0");
         obj_editor2.commit();
 
-        Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
 
         sv_main = (ScrollView)findViewById(R.id.scrol);
 
@@ -148,8 +145,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         });
 
-
-
         sv_main.setOnTouchListener(this);
         sv_main.getViewTreeObserver().addOnScrollChangedListener(this);
 
@@ -160,32 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         else{
             obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php","2");
         }
-/*
-        BR = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //String chiste = intent.getStringExtra("chiste");
-                //Toast.makeText(MainActivity.this,chiste, Toast.LENGTH_SHORT).show();
-        }
-        };
-*/
 
     }
-
-    /*
-    protected void onPause(){
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(BR);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(BR,new IntentFilter(MENSAJE));
-    }
-
-    */
-
 
     private void obtenerChistes(String url, final String mostrar){
 
@@ -321,8 +292,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             //botonFacebook.setMinimumHeight(50);
                             botonFacebook.setId(id_chiste_db);
                             contenedor.addView(botonFacebook);
-                            //layout_chistes.addView(botonFacebook);
-                            //rel_layout_acciones.addView(botonFacebook);
                             botonFacebook.setOnClickListener(new View.OnClickListener() {
                                 @SuppressLint("ResourceType")
                                 @Override
@@ -335,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     textViewChiste.buildDrawingCache();  // Creando un Bitmap del Texview el chiste
                                     Uri url = saveImageExternal(textViewChiste.getDrawingCache());
 
+
                                     if(Build.VERSION.SDK_INT>=24){
                                         try{
                                             Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
@@ -346,14 +316,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     }
 
                                     Intent sendIntent1 = new Intent();
+                                    //Intent sendIntent1=new Intent(Intent.ACTION_VIEW, FileProvider.getUriForFile(this, AUTHORITY, ));
                                     sendIntent1.setAction(Intent.ACTION_SEND);
-                                    sendIntent1.setData(url);
+//                                    sendIntent1.setData(url);
                                     sendIntent1.setType("image/*");
                                     sendIntent1.setPackage("com.facebook.orca");
+                                    sendIntent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                     sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
                                     //sendIntent1.putExtra(Intent.EXTRA_STREAM, getResources().getIdentifier("com.my.app:drawable/"+parts[1], null, null));
                                     try {
-                                        startActivity(sendIntent1);
+                                        startActivity(Intent.createChooser(sendIntent1, "Share image..."));
                                     }
                                     catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale Facebook Messenger", Toast.LENGTH_LONG).show();
@@ -417,8 +389,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                     Intent sendIntent1 = new Intent();
                                     sendIntent1.setAction(Intent.ACTION_SEND);
-                                    sendIntent1.setData(url);
+                                    //sendIntent1.setData(url);
                                     sendIntent1.setType("image/*");
+                                    sendIntent1.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                                     sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
                                     try {
                                         startActivity(sendIntent1);

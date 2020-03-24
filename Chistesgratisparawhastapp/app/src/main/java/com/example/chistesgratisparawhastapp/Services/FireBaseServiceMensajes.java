@@ -1,12 +1,15 @@
 package com.example.chistesgratisparawhastapp.Services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Html;
 
 import androidx.core.app.NotificationCompat;
@@ -26,47 +29,70 @@ public class FireBaseServiceMensajes extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         String chiste = remoteMessage.getData().get("chiste");
-        //Mensaje(chiste);
         mostrarNotificacion(chiste);
 
     }
 
-/*
-    private void Mensaje(String chiste){
-
-        Intent i = new Intent(MainActivity.MENSAJE);
-        i.putExtra("chiste",chiste);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
-    }
-*/
-
     private void mostrarNotificacion(String chiste) {
 
-        //Intent intent = new Intent(this, MainActivity.class);
+        // Creando un builder para la notificacion
+        NotificationCompat.Builder mBuilder;
 
-        //Aqui intento seleccionar la actividad que se abre con el push
+        // creando un string id del canal
+        String channelId = "my_channel_01";
+
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mBuilder = new NotificationCompat.Builder(this,null);
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+
+            CharSequence name = "humor";
+
+            String description = "Humor para los usuarios";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel miChannel = new NotificationChannel(channelId,name,importance);
+
+            miChannel.setDescription(description);
+            miChannel.enableLights(true);
+
+            miChannel.setLightColor(Color.RED);
+            miChannel.enableVibration(true);
+            miChannel.setVibrationPattern(new long[]{100,200,300,400,500,400,300,200,400});
+            notificationManager.createNotificationChannel(miChannel);
+
+            mBuilder = new NotificationCompat.Builder(this,channelId);
+
+        }
+
         Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent;
+        Random random1 = new Random();
 
-        //intent.putExtra("ms", "Message by Jorgesys"); //* Valor a enviar!
-
-        // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+             pendingIntent = PendingIntent.getActivity(this, random1.nextInt(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        }
+        else{
+             pendingIntent = PendingIntent.getActivity(this, random1.nextInt(), intent, PendingIntent.FLAG_ONE_SHOT);
+        }
 
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setAutoCancel(true)
-                .setContentTitle("Chistes gratis parar whatsApp")
+        mBuilder.setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(Html.fromHtml("<b>Nuevo chiste:</b><br>"+chiste)))
                 .setContentText("Nuevo chiste "+chiste)
                 .setSound(soundUri)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Random random = new Random();
+        if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+            mBuilder.setContentTitle("Chistes gratis parar whatsApp");
+        }
 
-        notificationManager.notify(random.nextInt(), notificationBuilder.build());
+        Random random = new Random();
+        notificationManager.notify(random.nextInt(), mBuilder.build());
 
     }
 }
