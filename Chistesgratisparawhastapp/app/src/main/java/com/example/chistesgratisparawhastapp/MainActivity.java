@@ -1,22 +1,17 @@
 package com.example.chistesgratisparawhastapp;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -26,7 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +34,6 @@ import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 
 import com.android.volley.AuthFailureError;
@@ -50,9 +43,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -545,8 +535,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                             //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
 
-                           // Modals nuevaModal = new Modals("Mensaje", mipreferencia_TotalRows.getString("totalRows","")+"b", "Ok", MainActivity.this);
-                           // nuevaModal.createModal();
 
                     }else{
 
@@ -819,9 +807,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         if(topDetector <= 0) {
 
-            //Toast.makeText(getBaseContext(),"Scroll View top reached",Toast.LENGTH_SHORT).show();
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
-            //shadow_top.setVisibility(View.INVISIBLE);
 
         }
         else if(bottomDetector <= 15 ) {
