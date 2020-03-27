@@ -40,6 +40,7 @@ import android.widget.Space;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 import com.android.volley.AuthFailureError;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     int x=0;
     boolean masChistes = true;
 
-    private static final String AUTHORITY="com.commonsware.android.cp.v4file";
+    //private static final String AUTHORITY="com.commonsware.android.cp.v4file";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle("Inicio");
+
+
         FirebaseMessaging.getInstance().subscribeToTopic("humor");
         //String token = FirebaseInstanceId.getInstance().getToken();
 
@@ -201,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
+                            //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
                             textViewChiste.setGravity(Gravity.CENTER);
@@ -325,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     sendIntent1.putExtra(Intent.EXTRA_STREAM, url);
                                     //sendIntent1.putExtra(Intent.EXTRA_STREAM, getResources().getIdentifier("com.my.app:drawable/"+parts[1], null, null));
                                     try {
-                                        startActivity(Intent.createChooser(sendIntent1, "Share image..."));
+                                        startActivity(Intent.createChooser(sendIntent1, "Compartir chiste..."));
                                     }
                                     catch (ActivityNotFoundException ex) {
                                         Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale Facebook Messenger", Toast.LENGTH_LONG).show();
@@ -818,8 +822,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             //Toast.makeText(getBaseContext(),"Scroll View top reached",Toast.LENGTH_SHORT).show();
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
             //shadow_top.setVisibility(View.INVISIBLE);
+
         }
-        else if(bottomDetector <= 0 ) {
+        else if(bottomDetector <= 15 ) {
 
             if(masChistes) {
 
@@ -846,11 +851,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
 
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View bottom reached");
-            //shadow_bottom.setVisibility(View.INVISIBLE);
         }
         else {
-            //shadow_top.setVisibility(View.VISIBLE);
-            //shadow_bottom.setVisibility(View.VISIBLE);
             x=0;
             //Toast.makeText(getBaseContext(),"en medio",Toast.LENGTH_SHORT).show();
         }

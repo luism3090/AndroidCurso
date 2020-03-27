@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.app.assist.AssistStructure;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -81,7 +82,7 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_busqueda_chistes);
 
         sv_main = (ScrollView)findViewById(R.id.scrol);
-        getSupportActionBar().setTitle("Nuevos Chistes");
+        getSupportActionBar().setTitle("Buscar Chistes");
 
 
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
@@ -135,7 +136,29 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
         et_busqueda_chiste.addTextChangedListener(new TextWatcher() {
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+
+                if(s.length() > 0){
+
+                    mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
+                    obj_editor2.putString("totalRows","0");
+                    obj_editor2.commit();
+
+                    if(masChistes == false){
+                        masChistes = true;
+                    }
+
+                    buscarChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/buscar_chistes.php","1");
+                }
+                else{
+                    //Toast.makeText(getApplicationContext(),String.valueOf(s.length()),Toast.LENGTH_SHORT).show();
+                    layout_chistes.removeAllViews();
+                }
+
+            }
+
+
 
             @Override
             public void beforeTextChanged(CharSequence s, int start,
@@ -145,23 +168,7 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                if(s.length() > 0){
 
-                    mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor obj_editor2  = mipreferencia_TotalRows.edit();
-                    obj_editor2.putString("totalRows","0");
-                    obj_editor2.commit();
-
-                    layout_chistes.removeAllViews();
-                    if(masChistes == false){
-                        masChistes = true;
-                    }
-                    buscarChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/buscar_chistes.php","1");
-                }
-                else{
-                    //Toast.makeText(getApplicationContext(),String.valueOf(s.length()),Toast.LENGTH_SHORT).show();
-                    layout_chistes.removeAllViews();
-                }
 
             }
         });
@@ -198,6 +205,10 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
 
                         JSONArray datosChistesArray = responseJSON.getJSONArray("mensaje");
 
+                        if(mostrar.equals("1")){
+                            layout_chistes.removeAllViews();
+                        }
+
                         for (int i = 0; i < datosChistesArray.length(); i++) {
 
                             JSONObject chistesArray = datosChistesArray.getJSONObject(i);
@@ -214,6 +225,7 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
                             textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
+                            //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
                             textViewChiste.setGravity(Gravity.CENTER);
@@ -767,10 +779,11 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
         int topDetector = sv_main.getScrollY();
         int bottomDetector = view.getBottom() -  (sv_main.getHeight() + sv_main.getScrollY());
 
+
         if(topDetector <= 0) {
 
         }
-        else if(bottomDetector <= 0 ) {
+        else if(bottomDetector <= 15 ) {
 
             if(masChistes) {
 

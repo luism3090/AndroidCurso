@@ -195,6 +195,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
                             textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
+                            //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
                             textViewChiste.setGravity(Gravity.CENTER);
@@ -736,7 +737,7 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
         if(topDetector <= 0) {
 
         }
-        else if(bottomDetector <= 0 ) {
+        else if(bottomDetector <= 15 ) {
 
             if (masChistes) {
 

@@ -161,6 +161,7 @@ public class CategoriasActivity extends AppCompatActivity {
                             botonCategoria.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             botonCategoria.setText(categoria);
                             botonCategoria.setBackgroundColor(Color.rgb(0,0,0));
+                            //botonCategoria.setBackgroundColor(Color.rgb(7,94,85));
                             botonCategoria.setTextColor(Color.rgb(255,255,255));
                             botonCategoria.setMinHeight(100);
                             //botonCategoria.setGravity(Gravity.CENTER);
@@ -195,7 +196,12 @@ public class CategoriasActivity extends AppCompatActivity {
                             Space espacioEntreChiste = new Space(getApplicationContext());
                             //Space espacioEntreChiste = new Space((Context) context);
                             espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            espacioEntreChiste.setMinimumHeight(50);
+                            if(i == datosArray.length()-1){
+                                espacioEntreChiste.setMinimumHeight(150);
+                            }
+                            else{
+                                espacioEntreChiste.setMinimumHeight(50);
+                            }
                             layout_categorias.addView(espacioEntreChiste);
 
 

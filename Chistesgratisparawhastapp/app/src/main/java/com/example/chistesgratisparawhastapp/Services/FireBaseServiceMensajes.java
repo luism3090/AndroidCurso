@@ -41,7 +41,6 @@ public class FireBaseServiceMensajes extends FirebaseMessagingService {
         // creando un string id del canal
         String channelId = "my_channel_01";
 
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         mBuilder = new NotificationCompat.Builder(this,null);
@@ -84,7 +83,7 @@ public class FireBaseServiceMensajes extends FirebaseMessagingService {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(Html.fromHtml("<b>Nuevo chiste:</b><br>"+chiste)))
                 .setContentText("Nuevo chiste "+chiste)
                 .setSound(soundUri)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setSmallIcon(R.drawable.ic_emoticon_risa)
                 .setContentIntent(pendingIntent);
 
         if(android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O){

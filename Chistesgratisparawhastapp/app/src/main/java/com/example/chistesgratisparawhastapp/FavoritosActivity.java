@@ -190,6 +190,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                             textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
+                            //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
                             textViewChiste.setTextColor(Color.rgb(255,255,255));
                             textViewChiste.setMinHeight(700);
                             textViewChiste.setGravity(Gravity.CENTER);
@@ -764,7 +765,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
             //Log.d(MainActivity.class.getSimpleName(),"Scroll View top reached");
             //shadow_top.setVisibility(View.INVISIBLE);
         }
-        else if(bottomDetector <= 0 ) {
+        else if(bottomDetector <= 15 ) {
 
             if (masChistes) {
 
