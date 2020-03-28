@@ -13,25 +13,31 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".BusquedaChistesActivity"></activity>
-        <activity android:name=".FavoritosActivity" />
-        <activity android:name=".ChistesCategoriaActivity" />
-        <activity android:name=".CategoriasActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Services.FireBaseId"
+        <activity android:name=".BusquedaChistesActivity" />
+        <activity android:name=".FavoritosActivity" />
+        <activity android:name=".ChistesCategoriaActivity" />
+        <activity android:name=".CategoriasActivity" />
+        <activity android:name=".MainActivity">
+
+        </activity>
+
+        <service
+            android:name=".Services.FireBaseId"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Services.FireBaseServiceMensajes"
+        <service
+            android:name=".Services.FireBaseServiceMensajes"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
