@@ -187,7 +187,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
                             TextView textViewChiste = new TextView(getApplicationContext());
-                            textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
                             //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
@@ -210,7 +210,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                             // --------------------------------- Creando un table layout como contenedor para colocar los botones de redes sociales ---------------------------------
 
                             LinearLayout contenedor = new LinearLayout(getApplicationContext());
-                            contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                            contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
                             contenedor.setOrientation(LinearLayout.HORIZONTAL);
                             //contenedor.setBackgroundColor(Color.rgb(20,50,90));
                             contenedor.setId(id_chiste_db);
@@ -531,7 +531,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
 
                         }
                         String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
-                        int regs = Integer.parseInt(rowsPref)+5;
+                        int regs = Integer.parseInt(rowsPref)+10;
                         String TotalRows = String.valueOf(regs);
 
                         mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);

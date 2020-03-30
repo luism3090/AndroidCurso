@@ -43,6 +43,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+//import com.google.android.gms.ads.AdRequest;
+//import com.google.android.gms.ads.AdView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -56,6 +58,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+//import com.google.android.gms.ads.MobileAds;
+//import com.google.android.gms.ads.initialization.InitializationStatus;
+//import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
     SharedPreferences mipreferencia_user;
@@ -68,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     ScrollView sv_main;
     int x=0;
     boolean masChistes = true;
+    //private AdView mAdView;
 
     //private static final String AUTHORITY="com.commonsware.android.cp.v4file";
 
@@ -77,8 +84,25 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setTitle("Inicio");
+        //MobileAds.initialize(this, "YOUR_ADMOB_APP_ID");
 
+        /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+
+            }
+        });
+
+
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+
+         */
+
+        getSupportActionBar().setTitle("Inicio");
 
         FirebaseMessaging.getInstance().subscribeToTopic("humor");
         //String token = FirebaseInstanceId.getInstance().getToken();
@@ -191,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
                             TextView textViewChiste = new TextView(getApplicationContext());
-                            textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            textViewChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             textViewChiste.setText(chiste);
                             textViewChiste.setBackgroundColor(Color.rgb(0,0,0));
                             //textViewChiste.setBackgroundColor(Color.rgb(7,94,85));
@@ -214,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             // --------------------------------- Creando un table layout como contenedor para colocar los botones de redes sociales ---------------------------------
 
                             LinearLayout contenedor = new LinearLayout(getApplicationContext());
-                            contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                            contenedor.setLayoutParams(new LinearLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
                             contenedor.setOrientation(LinearLayout.HORIZONTAL);
                             //contenedor.setBackgroundColor(Color.rgb(20,50,90));
                             contenedor.setPadding(0,-30,0,0);
@@ -518,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         }
                             String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
-                            int regs = Integer.parseInt(rowsPref)+5;
+                            int regs = Integer.parseInt(rowsPref)+10;
                             String TotalRows = String.valueOf(regs);
 
                             mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);

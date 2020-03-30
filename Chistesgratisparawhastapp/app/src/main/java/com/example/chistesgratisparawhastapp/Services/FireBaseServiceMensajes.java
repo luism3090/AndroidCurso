@@ -29,7 +29,7 @@ public class FireBaseServiceMensajes extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         String chiste = remoteMessage.getData().get("chiste");
-        mostrarNotificacion(chiste);
+       // mostrarNotificacion(chiste);
 
     }
 
