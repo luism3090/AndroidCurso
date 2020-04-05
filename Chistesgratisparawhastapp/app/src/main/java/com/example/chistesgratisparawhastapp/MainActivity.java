@@ -1,9 +1,5 @@
 package com.example.chistesgratisparawhastapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
@@ -35,6 +31,9 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,8 +42,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-//import com.google.android.gms.ads.AdRequest;
-//import com.google.android.gms.ads.AdView;
+
+//   PUBLICIDAD
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.InterstitialAd;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -58,9 +65,14 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-//import com.google.android.gms.ads.MobileAds;
-//import com.google.android.gms.ads.initialization.InitializationStatus;
-//import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+// PUBLICIDAD
+
+
+
+/*
+ import com.google.android.gms.ads.initialization.InitializationStatus;
+ import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+*/
 
 public class MainActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
@@ -74,9 +86,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     ScrollView sv_main;
     int x=0;
     boolean masChistes = true;
-    //private AdView mAdView;
 
-    //private static final String AUTHORITY="com.commonsware.android.cp.v4file";
+    // PUBLICIDAD
+    private AdView mAdView;
+    private RewardedVideoAd mRewardedVideoAd;
+    private InterstitialAd mInterstitialAd;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -84,23 +100,31 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //MobileAds.initialize(this, "YOUR_ADMOB_APP_ID");
+       MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
 
-        /*MobileAds.initialize(this, new OnInitializationCompleteListener() {
+
+        //  PUBLICIDAD
+    /*
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
 
             }
         });
 
+        */
 
-
+        // Banner
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+        mAdView.setVisibility(View.GONE);
 
+        // Interstitial
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
-         */
 
         getSupportActionBar().setTitle("Inicio");
 
@@ -132,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 categorias.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
                 startActivity(categorias);
+                
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Toast.makeText(getApplicationContext(),"aun no se carga el interstitial",Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -202,6 +232,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         JSONArray datosChistesArray = responseJSON.getJSONArray("mensaje");
 
+                        // PUBLICIDAD
+                        /*AdView adView = new AdView(getApplicationContext());
+                        adView.setAdSize(AdSize.LEADERBOARD);
+                        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+                        layout_chistes.addView(adView);
+                        AdRequest adRequest = new AdRequest.Builder().build();
+                        adView.loadAd(adRequest);*/
+
                         for (int i = 0; i < datosChistesArray.length(); i++) {
 
                             JSONObject chistesArray = datosChistesArray.getJSONObject(i);
@@ -211,6 +249,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
+                            Space espacioEntreChiste2 = new Space(getApplicationContext());
+                            espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            if(i == 0){
+                                espacioEntreChiste2.setMinimumHeight(200);
+                                layout_chistes.addView(espacioEntreChiste2);
+                            }
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
@@ -539,8 +584,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             espacioEntreChiste.setMinimumHeight(150);
                             layout_chistes.addView(espacioEntreChiste);
 
+                            /*
+                            if(datosChistesArray.length().equals(5)){
+
+                            }*/
+
 
                         }
+
+
+
                             String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
                             int regs = Integer.parseInt(rowsPref)+10;
                             String TotalRows = String.valueOf(regs);
@@ -557,6 +610,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             obj_editor1.putString("totalRows",String.valueOf(TotalRows));
                             obj_editor1.commit();
 
+
                             //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
 
 
@@ -567,6 +621,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         masChistes = false;
 
                     }
+
+                    // PUBLICIDAD
+                    mAdView.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {

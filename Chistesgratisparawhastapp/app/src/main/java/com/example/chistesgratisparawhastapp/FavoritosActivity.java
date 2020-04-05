@@ -52,6 +52,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+// PUBLICIDAD
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class FavoritosActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
     ProgressDialog dialog;
@@ -66,10 +71,20 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
     int x=0;
     boolean masChistes = true;
 
+    // PUBLICIDAD
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favoritos);
+
+        // PUBLICIDAD
+        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setVisibility(View.GONE);
 
         String id_usuario = getIntent().getStringExtra("id_usuario");
 
@@ -183,6 +198,13 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
+                            Space espacioEntreChiste2 = new Space(getApplicationContext());
+                            espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            if(i == 0){
+                                espacioEntreChiste2.setMinimumHeight(200);
+                                layout_chistes.addView(espacioEntreChiste2);
+                            }
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
@@ -559,10 +581,17 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
                             textViewNoHayChistes.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                             textViewNoHayChistes.setText("No tienes chistes favoritos");
                             textViewNoHayChistes.setGravity(Gravity.CENTER);
-                            textViewNoHayChistes.setPadding(0,200,0,0);
+                            textViewNoHayChistes.setPadding(0,300,0,0);
                             textViewNoHayChistes.setTextSize(24);
                             textViewNoHayChistes.setTextColor(Color.rgb(0,0,0));
                             layout_chistes.addView(textViewNoHayChistes);
+
+                            Space espacioEntreChiste = new Space(getApplicationContext());
+                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            espacioEntreChiste.setMinimumHeight(1500);
+                            layout_chistes.addView(espacioEntreChiste);
+                            masChistes = false;
                         }
                         else{
                             Modals nuevaModal = new Modals("Mensaje", mensaje, "Ok", FavoritosActivity.this);
@@ -572,6 +601,9 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
 
 
                     }
+
+                    // PUBLICIDAD
+                    mAdView.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {

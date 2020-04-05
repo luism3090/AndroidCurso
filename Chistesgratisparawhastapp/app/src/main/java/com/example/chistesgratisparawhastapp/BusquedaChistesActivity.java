@@ -59,6 +59,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+// PUBLICIDAD
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 
 public class BusquedaChistesActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener{
 
@@ -75,6 +80,9 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
     int x=0;
     boolean masChistes = true;
 
+    // PUBLICIDAD
+    private AdView mAdView;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,13 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
 
         sv_main = (ScrollView)findViewById(R.id.scrol);
         getSupportActionBar().setTitle("Buscar Chistes");
+
+        // PUBLICIDAD
+        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setVisibility(View.VISIBLE);
 
 
         final ImageView image_home1 = (ImageView)findViewById(R.id.image_home1);
@@ -137,6 +152,8 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
 
             @Override
             public void afterTextChanged(Editable s) {
+
+               // Toast.makeText(getApplicationContext(),String.valueOf(s.length()),Toast.LENGTH_SHORT).show();
 
                 if(s.length() > 0){
 
@@ -583,6 +600,7 @@ public class BusquedaChistesActivity extends AppCompatActivity implements View.O
 
 
                     }
+
 
 
                 } catch (JSONException e) {

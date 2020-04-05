@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".BusquedaChistesActivity">
 
     <LinearLayout
@@ -112,7 +113,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/ly_cont_busqueda_chistes"
         android:layout_width="match_parent"
@@ -140,7 +140,6 @@
             android:ems="10"
             android:inputType="textPersonName" />
 
-
     </LinearLayout>
 
     <ScrollView
@@ -165,8 +164,23 @@
                 app:layout_constraintTop_toTopOf="parent">
 
 
+
             </LinearLayout>
 
         </ScrollView>
+
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></com.google.android.gms.ads.AdView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,6 +35,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+// PUBLICIDAD
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class CategoriasActivity extends AppCompatActivity {
 
     ProgressDialog dialog;
@@ -48,6 +53,9 @@ public class CategoriasActivity extends AppCompatActivity {
     ScrollView sv_main;
     int x=0;
 
+    // PUBLICIDAD
+    private AdView mAdView;
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -55,9 +63,18 @@ public class CategoriasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorias);
 
+        // PUBLICIDAD
+        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setVisibility(View.GONE);
+
         getSupportActionBar().setTitle("Categorias");
 
         sv_main = (ScrollView)findViewById(R.id.scrol);
+
+
 
         String id_usuario = getIntent().getStringExtra("id_usuario");
 
@@ -148,11 +165,21 @@ public class CategoriasActivity extends AppCompatActivity {
 
                         for (int i = 0; i < datosArray.length(); i++) {
 
+
                             JSONObject datosRow = datosArray.getJSONObject(i);
                             String categoria = datosRow.getString("categoria");
                             String id_categoria = datosRow.getString("id_categoria");
                             int id_categoria_db = Integer.parseInt(id_categoria);
                             String fecha = datosRow.getString("fecha");
+
+
+                            Space espacioEntreChiste = new Space(getApplicationContext());
+                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            if(i == 0){
+                                espacioEntreChiste.setMinimumHeight(200);
+                                layout_categorias.addView(espacioEntreChiste);
+                            }
 
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
@@ -193,16 +220,16 @@ public class CategoriasActivity extends AppCompatActivity {
 
                             // --------------------------------------- Creando el espacio entre categorias ---------------------------------
 
-                            Space espacioEntreChiste = new Space(getApplicationContext());
+                            Space espacioEntreChiste2 = new Space(getApplicationContext());
                             //Space espacioEntreChiste = new Space((Context) context);
-                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                             if(i == datosArray.length()-1){
-                                espacioEntreChiste.setMinimumHeight(150);
+                                espacioEntreChiste2.setMinimumHeight(150);
                             }
                             else{
-                                espacioEntreChiste.setMinimumHeight(50);
+                                espacioEntreChiste2.setMinimumHeight(50);
                             }
-                            layout_categorias.addView(espacioEntreChiste);
+                            layout_categorias.addView(espacioEntreChiste2);
 
 
                         }
@@ -219,6 +246,9 @@ public class CategoriasActivity extends AppCompatActivity {
                         nuevaModal.createModal();
 
                     }
+
+                    // PUBLICIDAD
+                    mAdView.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {

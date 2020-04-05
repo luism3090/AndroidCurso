@@ -52,6 +52,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+// PUBLICIDAD
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class ChistesCategoriaActivity extends AppCompatActivity implements View.OnTouchListener, ViewTreeObserver.OnScrollChangedListener {
 
     ProgressDialog dialog;
@@ -66,11 +71,20 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
     int x=0;
     boolean masChistes = true;
 
+    // PUBLICIDAD
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chistes_categoria);
+
+        // PUBLICIDAD
+        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setVisibility(View.GONE);
 
         String id_categoria = getIntent().getStringExtra("id_categoria");
         String titulo_categoria = getIntent().getStringExtra("titulo_categoria");
@@ -188,6 +202,13 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
+                            Space espacioEntreChiste2 = new Space(getApplicationContext());
+                            espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            if(i == 0){
+                                espacioEntreChiste2.setMinimumHeight(200);
+                                layout_chistes.addView(espacioEntreChiste2);
+                            }
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
@@ -544,6 +565,9 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
                         masChistes = false;
 
                     }
+
+                    // PUBLICIDAD
+                    mAdView.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {

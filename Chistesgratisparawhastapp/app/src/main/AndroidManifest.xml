@@ -16,8 +16,8 @@
         android:usesCleartextTraffic="true">
 
         <meta-data
-            android:name="com.google.android.gms.ads.APLICATION_ID"
-            android:value="ca-app-pub-7642244438296434~6399908463" />
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7642244438296434~6399908463"/>
 
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -26,14 +26,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BusquedaChistesActivity" />
+        <activity android:name=".BusquedaChistesActivity"
+                  android:windowSoftInputMode="adjustResize" >
+        </activity>
         <activity android:name=".FavoritosActivity" />
         <activity android:name=".ChistesCategoriaActivity" />
         <activity android:name=".CategoriasActivity" />
         <activity android:name=".MainActivity">
-
         </activity>
-
+<!--
         <service
             android:name=".Services.FireBaseId"
             android:enabled="true"
@@ -42,6 +43,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+       -->
         <service
             android:name=".Services.FireBaseServiceMensajes"
             android:enabled="true"

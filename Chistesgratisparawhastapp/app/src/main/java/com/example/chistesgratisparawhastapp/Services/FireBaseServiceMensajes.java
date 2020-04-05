@@ -1,5 +1,6 @@
 package com.example.chistesgratisparawhastapp.Services;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +14,7 @@ import android.os.Build;
 import android.text.Html;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.chistesgratisparawhastapp.BusquedaChistesActivity;
@@ -24,12 +26,14 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 public class FireBaseServiceMensajes extends FirebaseMessagingService {
+    //private Context context;
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
         String chiste = remoteMessage.getData().get("chiste");
-       // mostrarNotificacion(chiste);
+        mostrarNotificacion(chiste);
 
     }
 
@@ -40,6 +44,9 @@ public class FireBaseServiceMensajes extends FirebaseMessagingService {
 
         // creando un string id del canal
         String channelId = "my_channel_01";
+
+        //NotificationManager notificationManager = (NotificationManager) context.getSystemService(Activity.NOTIFICATION_SERVICE);
+
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
