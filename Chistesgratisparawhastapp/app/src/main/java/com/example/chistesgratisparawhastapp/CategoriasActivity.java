@@ -64,7 +64,7 @@ public class CategoriasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_categorias);
 
         // PUBLICIDAD
-        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

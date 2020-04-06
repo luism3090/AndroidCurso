@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.text.Layout;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,7 +49,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -66,7 +66,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 // PUBLICIDAD
-
 
 
 /*
@@ -92,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private RewardedVideoAd mRewardedVideoAd;
     private InterstitialAd mInterstitialAd;
 
-
+    AdView adView2;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -100,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        // Anuncio de prueba
+        // MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+
+       //MobileAds.initialize(this, "ca-app-pub-7642244438296434/1571373178");
 
 
         //  PUBLICIDAD
@@ -142,10 +144,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
        // Toast.makeText(getApplicationContext(),id_usuario,Toast.LENGTH_SHORT).show();
 
         sv_main = (ScrollView)findViewById(R.id.scrol);
+        final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
 
         final ImageView image_categorias1 = (ImageView)findViewById(R.id.image_categorias1);
         final ImageView image_favoritos1 = (ImageView)findViewById(R.id.image_favoritos1);
         final ImageView image_busqueda1 = (ImageView)findViewById(R.id.image_busqueda1);
+
+
+        // PUBLICIDAD que va aparecer cada vez que se carguen mas chistes
+
 
         image_categorias1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 categorias.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
                 startActivity(categorias);
-                
+
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                 } else {
@@ -232,13 +239,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                         JSONArray datosChistesArray = responseJSON.getJSONArray("mensaje");
 
-                        // PUBLICIDAD
-                        /*AdView adView = new AdView(getApplicationContext());
-                        adView.setAdSize(AdSize.LEADERBOARD);
-                        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-                        layout_chistes.addView(adView);
-                        AdRequest adRequest = new AdRequest.Builder().build();
-                        adView.loadAd(adRequest);*/
+                        Space espacioEntreChiste2 = new Space(getApplicationContext());
+                        espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                        String totalRows = mipreferencia_TotalRows.getString("totalRows","");
+
+                        if(totalRows.equals("0")){
+                            espacioEntreChiste2.setMinimumHeight(200);
+                            layout_chistes.addView(espacioEntreChiste2);
+                        }
 
                         for (int i = 0; i < datosChistesArray.length(); i++) {
 
@@ -249,13 +258,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
-                            Space espacioEntreChiste2 = new Space(getApplicationContext());
-                            espacioEntreChiste2.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                            if(i == 0){
-                                espacioEntreChiste2.setMinimumHeight(200);
-                                layout_chistes.addView(espacioEntreChiste2);
-                            }
 
                             // --------------------------------- Creando en Text View para colocar el texto del chiste ---------------------------------
 
@@ -578,20 +580,36 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                             // --------------------------------------- Creando el espacio entre chistes ---------------------------------
 
-                            Space espacioEntreChiste = new Space(getApplicationContext());
-                            //Space espacioEntreChiste = new Space((Context) context);
-                            espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                            espacioEntreChiste.setMinimumHeight(150);
-                            layout_chistes.addView(espacioEntreChiste);
+                                Space espacioEntreChiste = new Space(getApplicationContext());
+                                //Space espacioEntreChiste = new Space((Context) context);
+                                espacioEntreChiste.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                espacioEntreChiste.setMinimumHeight(150);
+                                layout_chistes.addView(espacioEntreChiste);
 
-                            /*
-                            if(datosChistesArray.length().equals(5)){
 
-                            }*/
+                            if(i==4 || i == 9){
+
+                                adView2 = new AdView(getApplicationContext());
+                                adView2.setAdSize(AdSize.MEDIUM_RECTANGLE);
+                                // ca-app-pub-7642244438296434/1571373178  --> ESTE ES EL BUENO
+                                // ca-app-pub-3940256099942544/6300978111  --> PARA PRUEBAS
+                                adView2.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+                                layout_chistes.addView(adView2);
+                                AdRequest adRequest2 = new AdRequest.Builder().build();
+                                adView2.loadAd(adRequest2);
+
+                                // --------------------------------------- Creando el espacio entre chistes ---------------------------------
+
+                                Space espacioEntreChiste3 = new Space(getApplicationContext());
+                                //Space espacioEntreChiste = new Space((Context) context);
+                                espacioEntreChiste3.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                espacioEntreChiste3.setMinimumHeight(150);
+                                layout_chistes.addView(espacioEntreChiste3);
+
+                            }
 
 
                         }
-
 
 
                             String rowsPref = mipreferencia_TotalRows.getString("totalRows","");

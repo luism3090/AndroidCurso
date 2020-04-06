@@ -80,7 +80,7 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
         setContentView(R.layout.activity_favoritos);
 
         // PUBLICIDAD
-        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
