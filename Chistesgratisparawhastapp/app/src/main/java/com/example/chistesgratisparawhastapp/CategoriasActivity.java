@@ -38,6 +38,7 @@ import java.util.Map;
 // PUBLICIDAD
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
 public class CategoriasActivity extends AppCompatActivity {
@@ -47,14 +48,17 @@ public class CategoriasActivity extends AppCompatActivity {
     TTSManager ttsManager = null;
 
     SharedPreferences mipreferencia_user, mipreferencia_TotalRows, mipreferencia_categoria;
+    SharedPreferences pref_Index_InterstitialAd;
 
 //    ImageView image_home1,image_home2,image_categorias1,image_categorias2,image_favoritos1,image_favoritos2,image_nuevos1,image_nuevos2;
 
     ScrollView sv_main;
     int x=0;
+    int count_interstitalAd = 0;
 
     // PUBLICIDAD
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -63,12 +67,32 @@ public class CategoriasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categorias);
 
+        pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+        String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
+
+        if(index_interstitalAd.equals("")){
+            count_interstitalAd = 1;
+        }
+        else{
+            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+        }
+        SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+        obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+        obj_editor3.commit();
+
+        //Toast.makeText(getApplicationContext(),index_interstitalAd,Toast.LENGTH_SHORT).show();
+
         // PUBLICIDAD
 
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         mAdView.setVisibility(View.GONE);
+
+        // Interstitial
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         getSupportActionBar().setTitle("Categorias");
 
@@ -100,8 +124,10 @@ public class CategoriasActivity extends AppCompatActivity {
         image_home1.setOnClickListener(new View.OnClickListener() {
                 @Override
                         public void onClick(View v) {
-                                Intent inicio = new Intent(getApplicationContext(),MainActivity.class);
-                                startActivity(inicio);
+
+                    Intent inicio = new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(inicio);
+
                         }
         });
 
@@ -127,6 +153,7 @@ public class CategoriasActivity extends AppCompatActivity {
                 nuevosChistes.putExtra("id_usuario",mipreferencia_user.getString("id_usuario",""));
 
                 startActivity(nuevosChistes);
+
 
             }
         });
@@ -214,6 +241,7 @@ public class CategoriasActivity extends AppCompatActivity {
 
                                     startActivity(chistesCategoria);
 
+                                    incrementarIdInterstitial();
 
                                 }
                             });
@@ -247,7 +275,7 @@ public class CategoriasActivity extends AppCompatActivity {
 
                     }
 
-                    // PUBLICIDAD
+                    // PUBLICIDAD  mostrando Banner
                     mAdView.setVisibility(View.VISIBLE);
 
 
@@ -290,9 +318,21 @@ public class CategoriasActivity extends AppCompatActivity {
             dialog.dismiss();
     }
 
+    public void incrementarIdInterstitial(){
 
-
-
-
+        pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+        String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
+        if(index_interstitalAd.equals("15")){
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            obj_editor3.putString("index_interstitalAd","0");
+            obj_editor3.commit();
+        }else{
+            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+            obj_editor3.commit();
+        }
+        //Toast.makeText(getApplicationContext(),String.valueOf(count_interstitalAd),Toast.LENGTH_SHORT).show();
+    }
 
 }

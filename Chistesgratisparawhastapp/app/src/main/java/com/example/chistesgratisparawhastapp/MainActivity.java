@@ -46,10 +46,10 @@ import com.android.volley.toolbox.Volley;
 
 //   PUBLICIDAD
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.InterstitialAd;
 
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -65,6 +65,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
+
 // PUBLICIDAD
 
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     SharedPreferences mipreferencia_user;
     SharedPreferences mipreferencia_TotalRows;
+    SharedPreferences pref_Index_InterstitialAd;
 
     SwipeRefreshLayout miSwipeRefreshLayout;
     ProgressDialog dialog;
@@ -88,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
     // PUBLICIDAD
     private AdView mAdView;
-    private RewardedVideoAd mRewardedVideoAd;
+    private AdView adView2;
     private InterstitialAd mInterstitialAd;
 
-    AdView adView2;
+    int count_interstitalAd = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -99,22 +102,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Anuncio de prueba
-        // MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
+        pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+        String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
 
-       //MobileAds.initialize(this, "ca-app-pub-7642244438296434/1571373178");
+           if(index_interstitalAd.equals("")){
+               count_interstitalAd = 1;
+           }
+           else{
+               count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+           }
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            //obj_editor3.putString("index_interstitalAd", "0");
+            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+            obj_editor3.commit();
 
-
-        //  PUBLICIDAD
-    /*
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-
-            }
-        });
-
-        */
+        //Toast.makeText(getApplicationContext(),index_interstitalAd,Toast.LENGTH_SHORT).show();
 
         // Banner
         mAdView = findViewById(R.id.adView);
@@ -126,6 +128,17 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+                layout_chistes.setVisibility(View.VISIBLE);
+            }
+
+        });
 
 
         getSupportActionBar().setTitle("Inicio");
@@ -164,11 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                 startActivity(categorias);
 
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
-                    Toast.makeText(getApplicationContext(),"aun no se carga el interstitial",Toast.LENGTH_SHORT).show();
-                }
 
             }
         });
@@ -245,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         String totalRows = mipreferencia_TotalRows.getString("totalRows","");
 
                         if(totalRows.equals("0")){
-                            espacioEntreChiste2.setMinimumHeight(200);
+                            espacioEntreChiste2.setMinimumHeight(170);
                             layout_chistes.addView(espacioEntreChiste2);
                         }
 
@@ -254,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                             JSONObject chistesArray = datosChistesArray.getJSONObject(i);
                             String chiste = chistesArray.getString("chiste");
                             String id_chiste = chistesArray.getString("id_chiste");
-                            int id_chiste_db = Integer.parseInt(id_chiste);
+                            int id_chiste_db = parseInt(id_chiste);
                             String id_boton_favorito_rojo = chistesArray.getString("id_boton_favorito_rojo");
                             String id_boton_favorito_normal = chistesArray.getString("id_boton_favorito_normal");
 
@@ -341,6 +349,21 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale WhatsApp", Toast.LENGTH_LONG).show();
                                     }
 
+                                    // mostrando Intertitial
+                                    pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+                                    String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
+
+                                    if(index_interstitalAd.equals("15")){
+
+                                        // publicidad
+                                        if (mInterstitialAd.isLoaded()) {
+                                            mInterstitialAd.show();
+                                        }else{
+                                            //Toast.makeText(getApplicationContext(), "aun no se ha cargado el Intertitial", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    incrementarIdInterstitial();
 
                                 }
                             });
@@ -396,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         Toast.makeText(getApplicationContext(),"Para poder compartir la imagen instale Facebook Messenger", Toast.LENGTH_LONG).show();
                                     }
 
+                                    incrementarIdInterstitial();
 
                                 }
                             });
@@ -420,6 +444,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     copiarTexto.setPrimaryClip(clip);
 
                                     Toast.makeText(getApplicationContext(),"El texto del chiste ha sido copiado",Toast.LENGTH_SHORT).show();
+
+                                    incrementarIdInterstitial();
+
                                 }
                             });
 
@@ -465,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         Toast.makeText(getApplicationContext(),"Ocurrió un problema al compartir la imagen", Toast.LENGTH_LONG).show();
                                     }
 
-
+                                    incrementarIdInterstitial();
 
                                 }
                             });
@@ -511,6 +538,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                     eliminarChisteFavorito((id_chiste),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/eliminar_chiste_favorito.php");
 
+                                    incrementarIdInterstitial();
+
                                 }
                             });
 
@@ -555,6 +584,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                     guardarChisteFavorito((id_chiste),mipreferencia_user.getString("id_usuario",""),view.getId(),val2,"https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/guardar_chiste_favorito.php");
 
+                                    incrementarIdInterstitial();
+
                                 }
                             });
 
@@ -574,6 +605,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                                     ttsManager.initQueue(String.valueOf(textoChiste));
 
+                                    incrementarIdInterstitial();
+
                                 }
 
                             });
@@ -589,6 +622,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                             if(i==4 || i == 9){
 
+                                //Publicidad
                                 adView2 = new AdView(getApplicationContext());
                                 adView2.setAdSize(AdSize.MEDIUM_RECTANGLE);
                                 // ca-app-pub-7642244438296434/1571373178  --> ESTE ES EL BUENO
@@ -613,7 +647,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
 
                             String rowsPref = mipreferencia_TotalRows.getString("totalRows","");
-                            int regs = Integer.parseInt(rowsPref)+10;
+                            int regs = parseInt(rowsPref)+10;
                             String TotalRows = String.valueOf(regs);
 
                             mipreferencia_TotalRows = getSharedPreferences("indexQuery", Context.MODE_PRIVATE);
@@ -631,6 +665,9 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                             //Toast.makeText(getApplicationContext(), mipreferencia_TotalRows.getString("totalRows","")+"_c", Toast.LENGTH_LONG).show();
 
+                            if(datosChistesArray.length()<10){
+                                masChistes = false;
+                            }
 
                     }else{
 
@@ -640,7 +677,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
                     }
 
-                    // PUBLICIDAD
+                    // PUBLICIDAD  mostrando Banner
                     mAdView.setVisibility(View.VISIBLE);
 
 
@@ -958,6 +995,42 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
         }
         return uri;
+    }
+
+    public void incrementarIdInterstitial(){
+
+        pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+        String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
+        if(index_interstitalAd.equals("15")){
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            obj_editor3.putString("index_interstitalAd","0");
+            obj_editor3.commit();
+        }else{
+            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+            obj_editor3.commit();
+        }
+
+        //Toast.makeText(getApplicationContext(),String.valueOf(count_interstitalAd),Toast.LENGTH_SHORT).show();
+    }
+
+    public void onBackPressed() {
+        /*
+        if (mInterstitialAd.isLoaded()) {
+
+            final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
+
+            Toast.makeText(getApplicationContext(), String.valueOf(layout_chistes.getVisibility()), Toast.LENGTH_LONG).show();
+
+            mInterstitialAd.show();
+
+
+            Toast.makeText(getApplicationContext(), String.valueOf(layout_chistes.getVisibility()), Toast.LENGTH_LONG).show();
+
+        }else{
+            Toast.makeText(getApplicationContext(), "aun no se ha cargado el Intertitial", Toast.LENGTH_LONG).show();
+        }*/
     }
 
 }
