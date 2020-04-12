@@ -107,14 +107,16 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
            if(index_interstitalAd.equals("")){
                count_interstitalAd = 1;
+               SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+               //obj_editor3.putString("index_interstitalAd", "0");
+               obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+               obj_editor3.commit();
            }
            else{
-               count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+
+               incrementarIdInterstitial();
            }
-            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
-            //obj_editor3.putString("index_interstitalAd", "0");
-            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
-            obj_editor3.commit();
+
 
         //Toast.makeText(getApplicationContext(),index_interstitalAd,Toast.LENGTH_SHORT).show();
 
@@ -126,16 +128,18 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 
         // Interstitial
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        // ID DE PRUEBA --->  ca-app-pub-3940256099942544/1033173712
+        // ID EL BUENO ---> ca-app-pub-7642244438296434/5675855865
+        mInterstitialAd.setAdUnitId("ca-app-pub-7642244438296434/5675855865");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 // Load the next interstitial.
+
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-                layout_chistes.setVisibility(View.VISIBLE);
+
             }
 
         });
@@ -223,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private void obtenerChistes(String url, final String mostrar){
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(String response) {
 
@@ -620,25 +625,33 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                 layout_chistes.addView(espacioEntreChiste);
 
 
-                            if(i==4 || i == 9){
+                                if(i==4 || i==9){
 
-                                //Publicidad
-                                adView2 = new AdView(getApplicationContext());
-                                adView2.setAdSize(AdSize.MEDIUM_RECTANGLE);
-                                // ca-app-pub-7642244438296434/1571373178  --> ESTE ES EL BUENO
-                                // ca-app-pub-3940256099942544/6300978111  --> PARA PRUEBAS
-                                adView2.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-                                layout_chistes.addView(adView2);
-                                AdRequest adRequest2 = new AdRequest.Builder().build();
-                                adView2.loadAd(adRequest2);
+                                    TextView textTitleAdd = new TextView(getApplicationContext());
+                                    textTitleAdd.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                    textTitleAdd.setText("Anuncio");
+                                    textTitleAdd.setTextColor(Color.rgb(0,0,0));
+                                    textTitleAdd.setGravity(Gravity.CENTER);
+                                    layout_chistes.addView(textTitleAdd);
 
-                                // --------------------------------------- Creando el espacio entre chistes ---------------------------------
+                                    //Publicidad  cada 5 chistes
+                                    adView2 = new AdView(getApplicationContext());
+                                    adView2.setAdSize(AdSize.MEDIUM_RECTANGLE);
+                                    // ca-app-pub-7642244438296434/9400366508  --> ESTE ES EL BUENO
+                                    // ca-app-pub-3940256099942544/6300978111  --> PARA PRUEBAS
+                                    adView2.setAdUnitId("ca-app-pub-7642244438296434/9400366508");
+                                    AdRequest adRequest2 = new AdRequest.Builder().build();
+                                    adView2.loadAd(adRequest2);
+                                    layout_chistes.addView(adView2);
 
-                                Space espacioEntreChiste3 = new Space(getApplicationContext());
-                                //Space espacioEntreChiste = new Space((Context) context);
-                                espacioEntreChiste3.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                espacioEntreChiste3.setMinimumHeight(150);
-                                layout_chistes.addView(espacioEntreChiste3);
+                                    // --------------------------------------- Creando el espacio entre chistes ---------------------------------
+
+                                    Space espacioEntreChiste4 = new Space(getApplicationContext());
+                                    //Space espacioEntreChiste = new Space((Context) context);
+                                    espacioEntreChiste4.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                    espacioEntreChiste4.setMinimumHeight(150);
+                                    layout_chistes.addView(espacioEntreChiste4);
+
 
                             }
 
@@ -958,6 +971,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                         mostrarAlertaCargando();
                         obtenerChistes("https://practicaproductos.000webhostapp.com/chistesgratiswhatsApp/obtener_chistes.php", "1");
 
+
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -1016,20 +1030,14 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     public void onBackPressed() {
+
         /*
         if (mInterstitialAd.isLoaded()) {
 
-            final LinearLayout layout_chistes = (LinearLayout)findViewById(R.id.layout_chistes);
-
-            Toast.makeText(getApplicationContext(), String.valueOf(layout_chistes.getVisibility()), Toast.LENGTH_LONG).show();
-
             mInterstitialAd.show();
 
-
-            Toast.makeText(getApplicationContext(), String.valueOf(layout_chistes.getVisibility()), Toast.LENGTH_LONG).show();
-
         }else{
-            Toast.makeText(getApplicationContext(), "aun no se ha cargado el Intertitial", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "aun no se ha cargado el Intertitial", Toast.LENGTH_LONG).show();
         }*/
     }
 

@@ -91,9 +91,13 @@ public class FavoritosActivity extends AppCompatActivity implements View.OnTouch
 
         if(index_interstitalAd.equals("")){
             count_interstitalAd = 1;
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            //obj_editor3.putString("index_interstitalAd", "0");
+            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+            obj_editor3.commit();
         }
         else{
-            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+            incrementarIdInterstitial();
         }
         SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
         obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));

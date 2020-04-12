@@ -91,18 +91,19 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
         if(index_interstitalAd.equals("")){
             count_interstitalAd = 1;
+            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+            //obj_editor3.putString("index_interstitalAd", "0");
+            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+            obj_editor3.commit();
         }
         else{
-            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+            incrementarIdInterstitial();
         }
-        SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
-        obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
-        obj_editor3.commit();
+
 
         //Toast.makeText(getApplicationContext(),index_interstitalAd,Toast.LENGTH_SHORT).show();
 
         // PUBLICIDAD
-        MobileAds.initialize(this, "ca-app-pub-7642244438296434~6399908463");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -110,7 +111,9 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
         // Interstitial
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        // ID DE PRUEBA --->  ca-app-pub-3940256099942544/1033173712
+        // ID EL BUENO ---> ca-app-pub-7642244438296434/5675855865
+        mInterstitialAd.setAdUnitId("ca-app-pub-7642244438296434/5675855865");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         mInterstitialAd.setAdListener(new AdListener() {
@@ -601,15 +604,22 @@ public class ChistesCategoriaActivity extends AppCompatActivity implements View.
 
                             if(i==4 || i == 9){
 
-                                //Publicidad
+                                TextView textTitleAdd = new TextView(getApplicationContext());
+                                textTitleAdd.setLayoutParams(new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                                textTitleAdd.setText("Anuncio");
+                                textTitleAdd.setTextColor(Color.rgb(0,0,0));
+                                textTitleAdd.setGravity(Gravity.CENTER);
+                                layout_chistes.addView(textTitleAdd);
+
+                                //Publicidad cada 5 chistes
                                 adView2 = new AdView(getApplicationContext());
                                 adView2.setAdSize(AdSize.MEDIUM_RECTANGLE);
-                                // ca-app-pub-7642244438296434/1571373178  --> ESTE ES EL BUENO
+                                // ca-app-pub-7642244438296434/9400366508  --> ESTE ES EL BUENO
                                 // ca-app-pub-3940256099942544/6300978111  --> PARA PRUEBAS
-                                adView2.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-                                layout_chistes.addView(adView2);
+                                adView2.setAdUnitId("ca-app-pub-7642244438296434/9400366508");
                                 AdRequest adRequest2 = new AdRequest.Builder().build();
                                 adView2.loadAd(adRequest2);
+                                layout_chistes.addView(adView2);
 
                                 // --------------------------------------- Creando el espacio entre chistes ---------------------------------
 
