@@ -78,7 +78,7 @@ public class CategoriasActivity extends AppCompatActivity {
             obj_editor3.commit();
         }
         else{
-            incrementarIdInterstitial();
+            //incrementarIdInterstitial("activity");
         }
 
 
@@ -93,6 +93,8 @@ public class CategoriasActivity extends AppCompatActivity {
 
         // Interstitial
         mInterstitialAd = new InterstitialAd(this);
+        // ID DE PRUEBA --->  ca-app-pub-3940256099942544/1033173712
+        // ID EL BUENO ---> ca-app-pub-7642244438296434/5675855865
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
@@ -243,7 +245,21 @@ public class CategoriasActivity extends AppCompatActivity {
 
                                     startActivity(chistesCategoria);
 
-                                    incrementarIdInterstitial();
+                                    // mostrando Intertitial
+                                    pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
+                                    String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
+
+                                    if(index_interstitalAd.equals("15")){
+
+                                        // publicidad
+                                        if (mInterstitialAd.isLoaded()) {
+                                            mInterstitialAd.show();
+                                        }else{
+                                            //Toast.makeText(getApplicationContext(), "aun no se ha cargado el Intertitial", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    incrementarIdInterstitial("otro");
 
                                 }
                             });
@@ -320,21 +336,36 @@ public class CategoriasActivity extends AppCompatActivity {
             dialog.dismiss();
     }
 
-    public void incrementarIdInterstitial(){
+    public void incrementarIdInterstitial(String accion){
 
         pref_Index_InterstitialAd = getSharedPreferences("indexPublicidad", Context.MODE_PRIVATE);
         String index_interstitalAd = pref_Index_InterstitialAd.getString("index_interstitalAd","");
-        if(index_interstitalAd.equals("15")){
-            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
-            obj_editor3.putString("index_interstitalAd","0");
-            obj_editor3.commit();
-        }else{
-            count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
-            SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
-            obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
-            obj_editor3.commit();
+
+        if(accion.equals("otro"))  // cuando se pulse un boton DIFERENTE a Whastapp
+        {
+            int a = Integer.parseInt(index_interstitalAd);
+            if( a <= 14 ){
+                count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+                SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+                obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+                obj_editor3.commit();
+            }
         }
-        //Toast.makeText(getApplicationContext(),String.valueOf(count_interstitalAd),Toast.LENGTH_SHORT).show();
+        else if(accion.equals("whatsApp") || accion.equals("activity")){
+
+            if(index_interstitalAd.equals("15")){
+                SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+                obj_editor3.putString("index_interstitalAd","0");
+                obj_editor3.commit();
+            }else{
+                count_interstitalAd = Integer.parseInt(index_interstitalAd) + 1;
+                SharedPreferences.Editor obj_editor3  = pref_Index_InterstitialAd.edit();
+                obj_editor3.putString("index_interstitalAd", String.valueOf(count_interstitalAd));
+                obj_editor3.commit();
+            }
+        }
+
+        //Toast.makeText(getApplicationContext(),index_interstitalAd,Toast.LENGTH_SHORT).show();
     }
 
 }

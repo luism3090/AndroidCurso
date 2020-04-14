@@ -137,6 +137,19 @@
 
     </LinearLayout>
 
+    <!--
+      adUnitId   DE PRUEBA
+
+      ca-app-pub-3940256099942544/6300978111
+
+-->
+
+    <!--
+        adUnitId    YA EL BUENO
+
+        ca-app-pub-7642244438296434/1571373178
+    -->
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
